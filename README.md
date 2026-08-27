@@ -4,7 +4,9 @@
 
 ## Available Skills
 
-- [efficient-development](skills/efficient-development/SKILL.md) — 在现有软件项目中按需探索、遵循项目约束、实施最小一致变更并进行针对性验证。
+- [agent-project-bootstrap](skills/agent-project-bootstrap/SKILL.md) — 审计并接入软件仓库，形成项目画像，创建或完善基于仓库证据的 `AGENTS.md`，并报告值得补强的工程实践。
+
+该 Skill 用于项目首次接入、全面复审或有目标地整理项目指引，不用于日常实现、调试、评审或重构。它默认只修改已获授权且实际生效的 Agent 指引文件；依赖、CI、架构和其他工程化改造会先作为建议报告，得到明确授权后才实施。
 
 ## Repository Layout
 
@@ -18,17 +20,17 @@ skills/
 
 ## Usage
 
-将所需 Skill 安装或链接到 Agent 的 Skills 目录后，可以显式调用：
+将 Skill 安装或链接到 Agent 的 Skills 目录后，显式调用：
 
 ```text
-使用 $efficient-development 修复这个问题，并运行相关验证。
+使用 $agent-project-bootstrap 审计并接入这个仓库，创建或完善 AGENTS.md。
 ```
 
 支持自动发现的 Agent 也可以依据 frontmatter 中的 `name` 与 `description` 判断是否加载。
 
 ## Maintenance
 
-- 保持 `description` 简短、准确，并明确适用场景。
+- 保持 `description` 简短、准确，并明确适用与排除场景。
 - 只保留会影响 Agent 决策的规则，避免重复常识或累积一次性例外。
 - 根据真实任务和已验证的问题小步修订。
 - 保持 Skill 自包含；仅在有明确收益时增加辅助资源。
