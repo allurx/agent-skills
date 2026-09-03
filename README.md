@@ -5,8 +5,11 @@
 ## Available Skills
 
 - [agent-project-bootstrap](skills/agent-project-bootstrap/SKILL.md) — 审计并接入软件仓库，形成项目画像，创建或完善基于仓库证据的 `AGENTS.md`，并报告值得补强的工程实践。
+- [codex-efficient-engineering](skills/codex-efficient-engineering/SKILL.md) — 为既有软件工程选择合适的 Chat、Plan mode、Local/Worktree、compaction 和 Fast Mode 策略，降低不必要的 Context、等待与额度消耗。
 
-该 Skill 用于项目首次接入、全面复审或有目标地整理项目指引，不用于日常实现、调试、评审或重构。它默认只修改已获授权且实际生效的 Agent 指引文件；依赖、CI、架构和其他工程化改造会先作为建议报告，得到明确授权后才实施。
+`agent-project-bootstrap` 用于项目首次接入、全面复审或有目标地整理项目指引，不用于日常实现、调试、评审或重构。它默认只修改已获授权且实际生效的 Agent 指引文件；依赖、CI、架构和其他工程化改造会先作为建议报告，得到明确授权后才实施。
+
+`codex-efficient-engineering` 只负责 Codex workflow 和产品模式决策，不替代仓库 onboarding、Agent 指引建设或通用编码流程。普通开发任务仅在用户明确要求优化 Codex 工作方式时使用。
 
 ## Repository Layout
 
@@ -20,10 +23,12 @@ skills/
 
 ## Usage
 
-将 Skill 安装或链接到 Agent 的 Skills 目录后，显式调用：
+将所需 Skill 安装或链接到 Agent 的 Skills 目录后，显式调用：
 
 ```text
 使用 $agent-project-bootstrap 审计并接入这个仓库，创建或完善 AGENTS.md。
+
+使用 $codex-efficient-engineering 判断这个任务应继续当前 Chat、启用 Plan mode，还是放到 Worktree 中执行。
 ```
 
 支持自动发现的 Agent 也可以依据 frontmatter 中的 `name` 与 `description` 判断是否加载。
