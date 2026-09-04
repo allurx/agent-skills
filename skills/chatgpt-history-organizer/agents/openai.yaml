@@ -1,0 +1,4 @@
+interface:
+  display_name: "ChatGPT 聊天整理"
+  short_description: "全量审计聊天记录，修正标题并按项目完成归组"
+  default_prompt: "使用 $chatgpt-history-organizer 全量整理我的 ChatGPT 聊天记录，修正标题并归入合适项目。"

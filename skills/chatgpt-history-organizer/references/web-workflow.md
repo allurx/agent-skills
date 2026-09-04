@@ -1,15 +1,15 @@
-# ChatGPT Web Batch Verification
+# ChatGPT 网页批量核验参考
 
 仅在普通网页操作无法高效完成全量目录或验证时读取。本页记录的是一次成功任务中观察到的同源请求形状，不是公开稳定 API；ChatGPT 更新后可能失效。
 
-## Safety Boundaries
+## 安全边界
 
 - 先通过正常网页登录，并使用当前页面同源会话。
 - 从当前网页实际网络请求确认 URL、HTTP 方法、请求体和响应字段；不要凭本页盲写。
 - 不打印、复制、持久化或回传 `authorization`、Cookie、会话令牌及其他凭据。
 - 用稳定聊天 ID 跟踪进度。每次写入后重新 GET 验证，不依据 HTTP 200 单独判定成功。
 
-## Observed Request Shapes
+## 已观察到的请求形状
 
 全局聊天目录曾使用：
 
@@ -55,7 +55,7 @@ GET /backend-api/gizmos/{project_id}/conversations?cursor={cursor}
 
 按响应 cursor 分页，直至没有下一页。
 
-## Completion Invariants
+## 全量验收不变量
 
 - 所有分页结果按聊天 ID 合并后没有重复计数。
 - 所有目标范围内、非临时且未归档的普通聊天都有非空项目 ID。

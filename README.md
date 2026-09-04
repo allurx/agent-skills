@@ -1,32 +1,33 @@
 # Agent Skills
 
-面向 Codex 及兼容 Agent Skills 的可复用工作流集合。每个 Skill 保持独立、精简，只在相关任务中加载，以减少不必要的 Context 与 Token 消耗。
+面向 Codex 及兼容 Agent Skills 的可复用工作流集合。每个 Skill 聚焦一个明确任务边界，只在相关请求中加载，从而复用经过验证的决策、操作步骤和验收标准，而不让无关规则长期占用 Context。
 
-## Available Skills
+## Skills 分类
 
-- [agent-project-bootstrap](skills/agent-project-bootstrap/SKILL.md) — 审计并接入软件仓库，形成项目画像，创建或完善基于仓库证据的 `AGENTS.md`，并报告值得补强的工程实践。
-- [codex-efficient-engineering](skills/codex-efficient-engineering/SKILL.md) — 为既有软件工程选择合适的 Chat、Plan mode、Local/Worktree、compaction 和 Fast Mode 策略，降低不必要的 Context、等待与额度消耗。
-- [chatgpt-history-organizer](skills/chatgpt-history-organizer/SKILL.md) — 全量审计 ChatGPT 网页聊天，根据实际内容修正标题，并将所有普通聊天归入合适项目。
+### 软件工程与 Codex 工作流
 
-`agent-project-bootstrap` 用于项目首次接入、全面复审或有目标地整理项目指引，不用于日常实现、调试、评审或重构。它默认只修改已获授权且实际生效的 Agent 指引文件；依赖、CI、架构和其他工程化改造会先作为建议报告，得到明确授权后才实施。
+| Skill | 适用场景 | 核心结果 |
+| --- | --- | --- |
+| [`agent-project-bootstrap`](skills/agent-project-bootstrap/SKILL.md) | 项目首次接入、全面复审或定向完善项目指引 | 基于仓库证据形成项目画像，创建或完善实际生效的 `AGENTS.md`，并报告工程实践缺口 |
+| [`codex-efficient-engineering`](skills/codex-efficient-engineering/SKILL.md) | 需要优化 Codex Chat、Plan mode、Local/Worktree、compaction 或 Fast Mode 的使用方式 | 在不削弱验证与授权边界的前提下，降低不必要的 Context、等待和 credit 消耗 |
 
-`codex-efficient-engineering` 只负责 Codex workflow 和产品模式决策，不替代仓库 onboarding、Agent 指引建设或通用编码流程。普通开发任务仅在用户明确要求优化 Codex 工作方式时使用。
+### ChatGPT 内容与工作区管理
 
-`chatgpt-history-organizer` 用于整理 ChatGPT 网页的普通聊天记录，不管理 Codex 本地任务。它要求分页覆盖全部历史记录，并在数据和刷新后的网页侧栏中同时确认没有未归类聊天。
+| Skill | 适用场景 | 核心结果 |
+| --- | --- | --- |
+| [`chatgpt-history-organizer`](skills/chatgpt-history-organizer/SKILL.md) | 全量整理 ChatGPT 网页聊天、修复不准确标题、清空未归类聊天或复核既有整理结果 | 根据实际聊天内容修正标题并归入合适项目，通过数据与刷新后的网页侧栏双重核验完成情况 |
 
-## Repository Layout
+## 如何选择
 
-```text
-skills/
-└── <skill-name>/
-    └── SKILL.md
-```
+- 要为一个代码仓库建立或更新长期项目指引：使用 `$agent-project-bootstrap`。
+- 要决定一个软件工程任务如何在 Codex 中拆分、规划、隔离或节省额度：使用 `$codex-efficient-engineering`。
+- 要整理 ChatGPT 网页中的历史聊天、标题和项目：使用 `$chatgpt-history-organizer`。
 
-`SKILL.md` 保存 Skill 的通用目的、关键约束和核心 workflow。只有当某类任务确实需要较多条件化细节时，才增加 `references/`、`scripts/` 或 `assets/`，并从 `SKILL.md` 按需引用。
+这些 Skill 互不替代：仓库 onboarding、Codex workflow 决策和 ChatGPT 内容管理分别属于不同作用域。普通实现、调试、测试或代码评审不会仅因发生在 Codex 中就自动触发前两个 Skill。
 
-## Usage
+## 使用方式
 
-将所需 Skill 安装或链接到 Agent 的 Skills 目录后，显式调用：
+将需要的 Skill 目录安装或链接到 Agent 的 Skills 目录。支持自动发现的 Agent 会根据 `SKILL.md` frontmatter 中的 `name` 和 `description` 判断是否加载；也可以显式调用：
 
 ```text
 使用 $agent-project-bootstrap 审计并接入这个仓库，创建或完善 AGENTS.md。
@@ -36,11 +37,42 @@ skills/
 使用 $chatgpt-history-organizer 全量整理我的 ChatGPT 聊天记录，修正标题并归入合适项目。
 ```
 
-支持自动发现的 Agent 也可以依据 frontmatter 中的 `name` 与 `description` 判断是否加载。
+显式调用后只需补充目标、操作范围和特殊约束，不必重复 Skill 已经定义的完整流程。
 
-## Maintenance
+## 仓库结构
 
-- 保持 `description` 简短、准确，并明确适用与排除场景。
-- 只保留会影响 Agent 决策的规则，避免重复常识或累积一次性例外。
-- 根据真实任务和已验证的问题小步修订。
-- 保持 Skill 自包含；仅在有明确收益时增加辅助资源。
+```text
+skills/
+└── <skill-name>/
+    ├── SKILL.md
+    ├── agents/
+    │   └── openai.yaml
+    ├── references/
+    ├── scripts/
+    └── assets/
+```
+
+只有 `SKILL.md` 是必需文件。其他目录按实际收益添加：
+
+- `agents/openai.yaml`：Codex UI 展示信息和调用策略。
+- `references/`：只在特定模式下读取的详细流程、协议或领域资料。
+- `scripts/`：需要稳定复用和独立验证的确定性操作。
+- `assets/`：生成结果会复制或改造的模板、图片等资源。
+
+## 设计原则
+
+- Skill 名称和触发描述应准确区分适用与排除场景，避免吸引无关任务。
+- `SKILL.md` 只保留会改变 Agent 决策的目标、约束和核心 workflow；条件化细节放入按需引用的资源。
+- 访问能力不等于写入授权。外部修改、提交、推送、删除、发布或发送仍需遵守当前任务的授权范围。
+- 完成标准必须可验证；不能把命令成功、局部处理或当前可见视图外推为全量结果。
+- 根据真实任务和已验证失败小步修订，不把一次性提示、临时状态或通用常识堆进 Skill。
+
+## 验证与维护
+
+新增或修改 Skill 后，使用 Skill Creator 提供的校验器检查 frontmatter、目录名称和未完成占位符：
+
+```text
+quick_validate.py skills/<skill-name>
+```
+
+校验器只证明结构有效，不能证明工作流判断正确。还应检查触发描述是否精确、引用资源是否可发现、脚本是否实际运行，以及验收门槛是否能覆盖该 Skill 曾经解决的真实失败。

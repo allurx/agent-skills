@@ -1,22 +1,20 @@
 ---
 name: chatgpt-history-organizer
-description: Audit and organize all regular ChatGPT web conversations, repair inaccurate or duplicate titles from their actual content, and move every conversation into an appropriate project. Use when the user asks to classify, rename, fully organize, clear the ungrouped chat list, or verify a previous ChatGPT history cleanup. Do not use for Codex local task management.
-metadata:
-  short-description: Organize ChatGPT history, titles, and projects
+description: 全量审计和整理 ChatGPT 网页聊天记录，根据实际内容修正不准确或重复的标题，并把所有普通聊天归入合适项目。用户要求整理、分类、重命名、清空未归类聊天列表或复核既有整理结果时使用；不用于 Codex 本地任务侧栏管理。
 ---
 
-# ChatGPT History Organizer
+# ChatGPT 聊天记录整理
 
 把用户指定范围内的 ChatGPT 普通聊天完整整理为可检索的项目目录。完成标准是覆盖全部历史记录、标题能反映实际内容、每条聊天项目归属合理，并通过刷新后的全量复核证明未归类聊天为零。
 
-## Respect Scope and Authority
+## 授权与范围
 
 - 读取和审计可以直接进行；创建项目、重命名和移动聊天属于外部账号写操作，必须有用户明确授权。
 - 不删除、归档、分享或发送聊天，不更改聊天正文，不把整理授权扩大为其他账号操作。
 - 先确认整理的是 ChatGPT 网页“聊天”记录，而不是 Codex 本地任务或 ChatGPT“工作”任务。
 - 新整理时复用含义清楚的现有项目；只有现有项目无法合理容纳一类稳定主题时才创建新项目，避免一条聊天一个项目。
 
-## Organize the Complete History
+## 工作流
 
 1. 使用网页控制能力打开用户已登录的 ChatGPT，识别全部项目和普通聊天入口。
 2. 建立全量目录。必须分页、持续滚动或使用等价的只读列表接口直到穷尽；不能只处理当前视口、最近记录或搜索结果。
@@ -30,7 +28,7 @@ metadata:
    - 界面核验：刷新 ChatGPT 网页、展开侧栏，确认独立“聊天”历史区域不再显示未归类记录，项目列表仍正常。
 9. 只有两类核验都通过后才能报告完成。若用户整理期间新增聊天，应把它视为新增差异，继续处理并重新核验。
 
-## Name Conversations from Their Content
+## 标题原则
 
 - 根据真实内容命名，不根据旧标题猜测内容。
 - 保留用户能识别的技术名、产品名、类名、方法名和地域等关键词。
@@ -38,7 +36,7 @@ metadata:
 - 不把整段提问复制为标题，也不加入未经聊天内容支持的结论。
 - 对包含医疗、财务或个人经历的聊天，在准确性和侧栏隐私之间取平衡；没有必要时不暴露过多敏感细节。
 
-## Handle Rate Limits and Recovery
+## 限流与恢复
 
 本次经验值不是产品保证，开始前应以小批量探测当前限制：
 
@@ -50,6 +48,6 @@ metadata:
 
 需要通过 ChatGPT 网页内部接口提高批量核验效率时，读取 [references/web-workflow.md](references/web-workflow.md)。接口可能变化，必须先观察当前网页请求并验证字段语义。
 
-## Report Verifiable Results
+## 交付
 
 报告实际覆盖数量、唯一聊天数量、项目数量、未归类数量、标题修复数量、验证方式、限流或未验证项。不要只说“已经整理完成”，也不要把局部成功外推为全量完成。
