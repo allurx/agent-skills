@@ -22,9 +22,9 @@ description: Audit and bootstrap a software repository for efficient agent-assis
 
 ## Protect the Repository
 
-1. 确认目标仓库根目录、当前工作目录和任务覆盖范围。
-2. 在 Codex 环境中，确认 `CODEX_HOME` 并在可访问时读取 active config 的 `project_doc_fallback_filenames` 与 `project_doc_max_bytes`；无法确认时，把 fallback 和大小限制标记为未验证，不凭记忆猜测。
-3. 按真实发现优先级建立从仓库根到目标路径的 active instruction chain：每一级目录记录生效的 `AGENTS.override.md`、`AGENTS.md` 或已配置 fallback 文件，并标记被遮蔽的文件。Comprehensive 模式还要先枚举任务范围内的整个 instruction tree，避免漏掉其他子树的嵌套指引。
+1. 确认任务覆盖的项目目录、当前 run 的工作目录（cwd）和目标编辑目录；使用 Git 时另行确认仓库根目录，不把这些路径视为同一个位置。
+2. 在 Codex 环境中，确认 `CODEX_HOME` 并读取实际生效的 `project_root_markers`、`project_doc_fallback_filenames` 与 `project_doc_max_bytes`。按当前发现规则和有效 markers 分别解析各个待检查 cwd 的 Codex 项目发现根，不用 Git 根替代；`project_root_markers = []` 或未找到 marker 时，项目层只检查该 cwd。配置或发现根无法确认时，标记相关结论为未验证，不把推测的文件链声称为实际加载链。
+3. 区分 Codex home 的全局指引层与各 cwd 的项目指引链。当前 run 的项目链止于实际加载时的 cwd；目标编辑目录若不同，应作为另一个候选启动 cwd 单独重建静态链，不能当作当前 run 已加载的内容。每条项目链从其 Codex 项目发现根到对应 cwd，按真实发现优先级记录各级的 `AGENTS.override.md`、`AGENTS.md` 或已配置 fallback 文件，并标记被遮蔽的文件。Comprehensive 模式还要先枚举任务范围内的整个 instruction tree，避免漏掉其他子树的嵌套指引。
 4. 若使用 Git，检查工作树和相关 diff，识别并保护用户已有修改；不要覆盖或顺手整理无关内容。
 5. 避开依赖目录、构建产物、缓存、生成文件、vendor、大型二进制和与目标无关的内容。读取大型文本文件前先检查大小，只提取相关片段或元数据。不得读取或复制凭据、私钥、`.env` 值等敏感数据。
 
@@ -32,7 +32,7 @@ description: Audit and bootstrap a software repository for efficient agent-assis
 
 仅在 comprehensive bootstrap audit 中建立完整项目画像。先建立低成本索引，再按证据逐步深入；“全面”指覆盖关键工程维度，不是逐个读取全部文件。
 
-1. 枚举受版本控制的文件和顶层目录，识别仓库类型、workspace 或多模块边界。
+1. 枚举受版本控制的文件和顶层目录；未使用版本控制时，枚举项目目录中的源文件和配置，识别项目类型、workspace 或多模块边界。
 2. 优先读取 README、manifest，以及 build、test、lint、format、typecheck、CI、release 和部署配置。对通常较大的 lockfile 只提取当前任务需要的包管理器、版本或依赖证据，不默认加载全文。
 3. 从配置指向的入口、代表性模块、调用关系和测试继续追踪。仅在现有证据存在冲突、空白或高风险时扩大读取范围。
 4. README、配置、代码与测试相互印证；不要把单一文档或通用生态惯例当作仓库事实。只有在当前状态无法解释时，才检查相关 Git 历史。
@@ -73,8 +73,8 @@ description: Audit and bootstrap a software repository for efficient agent-assis
 ## Verify and Report
 
 - 核对写入 Agent 指引的路径、命令和约束都能追溯到当前仓库证据。
-- 静态重建最终 active instruction chain，确认没有编辑被遮蔽的文件，并检查合并内容不会超过当前配置的项目指引大小限制。
-- 环境具备合适的 Codex 指引来源检查能力时，从仓库根和至少一个有嵌套规则的代表性目录验证实际加载来源；无法验证时明确报告“内容已验证，运行时加载链未验证”。
+- 按各个目标启动 cwd 及其 Codex 项目发现根，静态重建最终项目指引链，确认修改位于相应链内且未被遮蔽，并检查各条链不会超过实际生效的项目指引大小限制；配置或发现根仍未知时，保留未验证结论。
+- 环境具备合适的 Codex 指引来源检查能力时，在目标 cwd 的新 run/会话中验证实际加载来源；comprehensive 模式覆盖预期启动目录和存在嵌套规则时的代表性目录。当前 run 的已加载上下文不能证明修改后的文件已生效；无法进行新 run 验证时，明确报告“内容已验证，运行时加载链未验证”。
 - 在环境已就绪且不会隐式下载或改变外部状态时，运行低成本的针对性检查；需要安装依赖或扩大权限时先说明并请求授权。
 - 审查最终 diff，确认没有意外改动、敏感信息、重复或过度具体的指引。
 - Targeted 模式只报告目标指引、依据、验证和未解决问题；comprehensive 模式报告项目画像、指引变更、工程缺口及优先级、实际验证、未解决问题和建议的下一步。

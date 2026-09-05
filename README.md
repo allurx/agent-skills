@@ -15,7 +15,7 @@
 
 | Skill | 适用场景 | 核心结果 |
 | --- | --- | --- |
-| [`chatgpt-history-organizer`](skills/chatgpt-history-organizer/SKILL.md) | 全量整理 ChatGPT 网页聊天、修复不准确标题、清空未归类聊天或复核既有整理结果 | 根据实际聊天内容修正标题并归入合适项目，通过数据与刷新后的网页侧栏双重核验完成情况 |
+| [`chatgpt-history-organizer`](skills/chatgpt-history-organizer/SKILL.md) | 审计或整理指定范围的 ChatGPT 网页聊天、修复标题、全量归类或复核既有整理结果 | 按已授权动作核验标题和项目归属，检查共享状态与移动资格，并报告范围内完成情况和未解决项 |
 
 ## 如何选择
 
@@ -69,10 +69,12 @@ skills/
 
 ## 验证与维护
 
-新增或修改 Skill 后，使用 Skill Creator 提供的校验器检查 frontmatter、目录名称和未完成占位符：
+新增或修改 Skill 后，定位当前环境中 Skill Creator 提供的 `scripts/quick_validate.py`，确认 Python 和 `PyYAML` 可用，再对每个 Skill 执行校验。该脚本由 Skill Creator 提供，不随本仓库分发；将以下路径替换为实际位置：
 
 ```text
-quick_validate.py skills/<skill-name>
+python -X utf8 <skill-creator>/scripts/quick_validate.py skills/<skill-name>
 ```
 
-校验器只证明结构有效，不能证明工作流判断正确。还应检查触发描述是否精确、引用资源是否可发现、脚本是否实际运行，以及验收门槛是否能覆盖该 Skill 曾经解决的真实失败。
+校验器检查 frontmatter、`name` 格式和未完成占位符；还需独立核对 `name` 与父目录名称一致、相对引用存在，以及 `agents/openai.yaml` 的字段和 Skill 对应。不要把校验器通过表述为这些补充检查或工作流验证已经完成。
+
+工作流修改应以隔离样本验证决策和验收结果。例如聊天整理需覆盖仅改名、只读复核、共享项目、不可移动聊天、已归错项目、分页期间更新及长对话分支；项目指引需覆盖自定义发现根。核对实际动作和未解决项是否符合请求，不以匹配文案代替行为验证。涉及真实账号或新会话的验证受环境与授权限制时，明确报告尚未验证的行为。
