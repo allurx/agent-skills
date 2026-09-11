@@ -17,13 +17,20 @@
 | --- | --- | --- |
 | [`chatgpt-history-organizer`](skills/chatgpt-history-organizer/SKILL.md) | 审计或整理指定范围的 ChatGPT 网页聊天、修复标题、全量归类或复核既有整理结果 | 按已授权动作核验标题和项目归属，检查共享状态与移动资格，并报告范围内完成情况和未解决项 |
 
+### 图像创作与摄影策划
+
+| Skill | 适用场景 | 核心结果 |
+| --- | --- | --- |
+| [`staged-candid-character-photographer`](skills/staged-candid-character-photographer/SKILL.md) | 为成年虚构角色制作真人 COS 或二次元图片，逐项设置场景、着装、动作、表情、写实程度与镜头 | 汇总已选参数，调用可用工具生成并检查图片；支持只交付完整提示词，明确工具不可用或部分失败时的完成范围 |
+
 ## 如何选择
 
 - 要为一个代码仓库建立或更新长期项目指引：使用 `$agent-project-bootstrap`。
 - 要决定一个软件工程任务如何在 Codex 中拆分、规划、隔离或节省额度：使用 `$codex-efficient-engineering`。
 - 要整理 ChatGPT 网页中的历史聊天、标题和项目：使用 `$chatgpt-history-organizer`。
+- 要从角色名开始策划摄影参数，并生成图片或完整提示词：使用 `$staged-candid-character-photographer`。
 
-这些 Skill 互不替代：仓库 onboarding、Codex workflow 决策和 ChatGPT 内容管理分别属于不同作用域。普通实现、调试、测试或代码评审不会仅因发生在 Codex 中就自动触发前两个 Skill。
+这些 Skill 分别覆盖仓库 onboarding、Codex workflow 决策、ChatGPT 内容管理和角色摄影。普通实现、调试、测试或代码评审不会仅因发生在 Codex 中就自动触发前两个 Skill；角色百科与剧情问答也不会触发摄影流程。
 
 ## 使用方式
 
@@ -35,6 +42,8 @@
 使用 $codex-efficient-engineering 判断这个任务应继续当前 Chat、启用 Plan mode，还是放到 Worktree 中执行。
 
 使用 $chatgpt-history-organizer 全量整理我的 ChatGPT 聊天记录，修正标题并归入合适项目。
+
+使用 $staged-candid-character-photographer 为约尔·福杰制作图片，先引导我设置参数。
 ```
 
 显式调用后只需补充目标、操作范围和特殊约束，不必重复 Skill 已经定义的完整流程。
@@ -48,6 +57,7 @@ skills/
     ├── agents/
     │   └── openai.yaml
     ├── references/
+    ├── examples/
     ├── scripts/
     └── assets/
 ```
@@ -56,6 +66,7 @@ skills/
 
 - `agents/openai.yaml`：Codex UI 展示信息和调用策略。
 - `references/`：只在特定模式下读取的详细流程、协议或领域资料。
+- `examples/`：帮助理解调用方式、跨轮交互和预期行为的示例。
 - `scripts/`：需要稳定复用和独立验证的确定性操作。
 - `assets/`：生成结果会复制或改造的模板、图片等资源。
 

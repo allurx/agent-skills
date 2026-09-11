@@ -1,0 +1,4 @@
+interface:
+  display_name: "引导式角色摄影师"
+  short_description: "从角色名开始，逐项选择场景、着装、动作、表情与镜头，汇总后生成图片"
+  default_prompt: "使用 $staged-candid-character-photographer 为我喜欢的虚构角色制作图片，请先询问角色名，再逐项引导我设置摄影参数。"
