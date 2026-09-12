@@ -9,7 +9,7 @@
 | 软件工程 | [`agent-project-bootstrap`](skills/agent-project-bootstrap/SKILL.md) | 项目接入与指引审计，创建或完善 `AGENTS.md` |
 | 软件工程 | [`codex-efficient-engineering`](skills/codex-efficient-engineering/SKILL.md) | 优化 Codex 的任务拆分、模式和工作区选择，减少上下文与额度消耗 |
 | 聊天管理 | [`chatgpt-history-organizer`](skills/chatgpt-history-organizer/SKILL.md) | 审计、重命名和归类 ChatGPT 网页聊天 |
-| 图像创作 | [`staged-candid-character-photographer`](skills/staged-candid-character-photographer/SKILL.md) | 引导设置成年虚构角色的摄影参数，生成图片或完整提示词 |
+| 图像创作 | [`staged-candid-character-photographer`](skills/staged-candid-character-photographer/SKILL.md) | 引导设置虚构角色的摄影参数，生成图片或完整提示词 |
 
 ## 使用
 
