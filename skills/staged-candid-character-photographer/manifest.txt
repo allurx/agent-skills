@@ -3,5 +3,6 @@ SKILL.md
 agents/openai.yaml
 examples/usage-examples.md
 manifest.txt
+references/generation-workflow.md
 references/parameter-guide.md
 references/visual-style.md

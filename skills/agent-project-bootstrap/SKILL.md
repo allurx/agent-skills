@@ -1,81 +1,58 @@
 ---
 name: agent-project-bootstrap
-description: Audit and bootstrap a software repository for efficient agent-assisted development. Use only when explicitly asked to onboard a repository, perform a comprehensive repository-readiness audit, or create or systematically improve evidence-based scoped AGENTS.md files. Do not use for routine repository summaries, implementation, debugging, review, or refactoring.
+description: Audit repository readiness or create and improve scoped AGENTS.md files from repository evidence when requested. Use for repository onboarding and instruction maintenance, not routine summaries, implementation, debugging, or code review.
 ---
 
 # Agent Project Bootstrap
 
-为软件仓库建立准确、精简、低维护成本的 Agent 工作上下文。初次审计可以投入较多 Context，但目标是降低后续任务反复探索的总成本；Token 优化不得以遗漏关键约束、降低正确性或跳过必要验证为代价。
+为软件仓库建立有证据、能改变后续 Agent 行动的工作指引。先按请求确定审计深度，再修复实际缺口；没有长期有效的缺口时，可以不改文件。
 
 ## Respect the Requested Scope
 
-- 只有用户明确要求实际创建或更新文件时才写入；审计、评估、建议、“应如何创建”或方案请求一律保持只读。
-- 获得写入授权后，可以创建或更新适用且生效的 Agent 指引文件；没有现有指引时默认创建 `AGENTS.md`。
-- 默认不安装依赖、不增加工具或 CI、不重构架构、不迁移数据，也不改变公共 API。把这些工程化缺口作为独立建议；只有用户明确授权后才实施。
-- 未经明确要求，不创建额外的项目画像文档，不提交、不推送、不部署，也不修改外部系统。
-- 只读或零写入约束覆盖 ignored 文件、构建产物、报告、缓存和依赖下载；会产生任何此类写入的命令都不运行，除非另获授权并使用合适的隔离环境。
+- 审计或建议请求保持受审对象只读；请求创建、修复或优化指引时，直接完成已授权范围内的调查、编辑和验证。不要把方案请求当作实施授权，也不要为已授权步骤反复确认。
+- 指引维护不自动包含依赖安装、工具或 CI 建设、业务重构、数据迁移、Git 提交、发布或全局配置部署；工程缺口先作为建议报告。
+- 检查命令的实际副作用。只读审计不在受审对象中产生 ignored 文件、构建产物或缓存；明确要求零写入时，报告和临时目录也受该限制。隔离检查仍须符合现有授权和权限。
 
 根据请求选择最小充分模式：
 
-- **Targeted instruction update**：只审计目标目录的有效指引链、相关配置、命令和风险，不生成完整项目画像，也不做全仓工程就绪度审计。
-- **Comprehensive bootstrap audit**：用于首次接入或明确要求的全面复审，执行完整项目画像、指引 gap analysis 和工程就绪度审计。
+- **定向维护**：核对目标目录的指引链，以及支持本次规则的配置、命令和风险，不扩展为全仓审计。
+- **全面接入或复审**：额外读取 [references/comprehensive-audit.md](references/comprehensive-audit.md)，覆盖项目画像和工程就绪度。仅在此模式加载该参考。
 
 ## Protect the Repository
 
-1. 确认任务覆盖的项目目录、当前 run 的工作目录（cwd）和目标编辑目录；使用 Git 时另行确认仓库根目录，不把这些路径视为同一个位置。
-2. 在 Codex 环境中，确认 `CODEX_HOME` 并读取实际生效的 `project_root_markers`、`project_doc_fallback_filenames` 与 `project_doc_max_bytes`。按当前发现规则和有效 markers 分别解析各个待检查 cwd 的 Codex 项目发现根，不用 Git 根替代；`project_root_markers = []` 或未找到 marker 时，项目层只检查该 cwd。配置或发现根无法确认时，标记相关结论为未验证，不把推测的文件链声称为实际加载链。
-3. 区分 Codex home 的全局指引层与各 cwd 的项目指引链。当前 run 的项目链止于实际加载时的 cwd；目标编辑目录若不同，应作为另一个候选启动 cwd 单独重建静态链，不能当作当前 run 已加载的内容。每条项目链从其 Codex 项目发现根到对应 cwd，按真实发现优先级记录各级的 `AGENTS.override.md`、`AGENTS.md` 或已配置 fallback 文件，并标记被遮蔽的文件。Comprehensive 模式还要先枚举任务范围内的整个 instruction tree，避免漏掉其他子树的嵌套指引。
-4. 若使用 Git，检查工作树和相关 diff，识别并保护用户已有修改；不要覆盖或顺手整理无关内容。
-5. 避开依赖目录、构建产物、缓存、生成文件、vendor、大型二进制和与目标无关的内容。读取大型文本文件前先检查大小，只提取相关片段或元数据。不得读取或复制凭据、私钥、`.env` 值等敏感数据。
+确认项目范围、当前启动工作目录（cwd）、目标编辑目录和 Git 状态，保留已有及无关修改。只读配置中与任务相关的键；不读取或输出凭据、私钥或 `.env` 值。优先使用文件索引和精确搜索，跳过依赖、生成物和大型无关文件。
 
-## Build an Evidence-Based Project Profile
+## Resolve the Instruction Scope
 
-仅在 comprehensive bootstrap audit 中建立完整项目画像。先建立低成本索引，再按证据逐步深入；“全面”指覆盖关键工程维度，不是逐个读取全部文件。
+修改前识别宿主实际使用的指引规则。以下是 Codex 的检查要点；其他 Agent 不套用 Codex 配置。
 
-1. 枚举受版本控制的文件和顶层目录；未使用版本控制时，枚举项目目录中的源文件和配置，识别项目类型、workspace 或多模块边界。
-2. 优先读取 README、manifest，以及 build、test、lint、format、typecheck、CI、release 和部署配置。对通常较大的 lockfile 只提取当前任务需要的包管理器、版本或依赖证据，不默认加载全文。
-3. 从配置指向的入口、代表性模块、调用关系和测试继续追踪。仅在现有证据存在冲突、空白或高风险时扩大读取范围。
-4. README、配置、代码与测试相互印证；不要把单一文档或通用生态惯例当作仓库事实。只有在当前状态无法解释时，才检查相关 Git 历史。
-5. 当下列维度已有可靠证据，或已明确标记为未知/不适用时停止探索：
-   - 项目目的、用户场景和不可破坏的产品约束；
-   - 语言、运行时、包管理、构建与本地启动方式；
-   - 目录职责、模块边界、入口和 source of truth；
-   - 数据、迁移、兼容性、公共 API、安全、性能、离线或部署约束；
-   - 测试层级、质量门禁、发布流程、生成内容、license/compliance 和禁止编辑区域；
-   - 与项目类型相符的高风险契约。例如公共库的发布产物、API/module metadata 和独立消费者验证，或全局状态涉及的并发、生命周期、可重入性与测试隔离。
+- 核对 `CODEX_HOME`、实际生效的 `project_root_markers`、`project_doc_fallback_filenames` 和 `project_doc_max_bytes`，按启动 cwd 解析项目发现根，不能直接用 Git 根替代。空 markers 或没有发现根时只检查该 cwd。
+- 全局层在 Codex home 中按 `AGENTS.override.md`、`AGENTS.md` 选择首个非空指引；项目层从发现根到启动 cwd，逐层按 override、基础文件、配置的 fallback 顺序选择首个非空文件，每层最多一个，较深层规则覆盖冲突的上层规则。
+- 记录选中的文件及被遮蔽的文件。目标目录与启动 cwd 不同时，单独核对其适用指引；目标目录的候选启动链不代表当前 run 已自动加载它。全面审计还要枚举范围内其他子树的嵌套指引。
+- 有维护源与生效副本时区分两者。按用户指定目标修改；维护源更新不等于部署。override 的用途无法从现有证据判断且会改变长期规则时，再询问处理方式。
 
-在最终报告中给出结构化项目画像，并把内容区分为已确认事实、合理推断和未解决问题。详细画像默认留在报告中，不全部写入每次任务都会加载的 `AGENTS.md`。
+配置、发现根或加载行为不明时，查阅当前 [AGENTS.md 文档](https://learn.chatgpt.com/docs/agent-configuration/agents-md) 和 [项目发现配置](https://learn.chatgpt.com/docs/config-file/config-advanced)，并保留未验证项。静态文件检查不能证明当前会话的实际加载来源。
 
 ## Create or Improve AGENTS.md
 
-先对现有有效指引做 gap analysis：保留仍然准确的用户规则和结构，修正已失效内容，合并重复规则，避免只在文件末尾不断追加。每条候选规则都应通过 admission test：有仓库证据、项目特有、常规重构后仍成立、不能轻易从当前文件推断，并会改变未来 Agent 的行动。
+先比较现有规则与仓库证据，修正失效内容、合并重复规则，保留准确的用户约定。新增规则应同时满足：有证据、属于该作用域、预计反复使用、不能轻易从源码或配置推断、遗漏会影响后续行动。明确的用户工作约定也是依据；不要把模型偏好包装成项目要求。
 
 - 仓库根指引只保存适用于整个仓库的长期规则。仅当子系统确有不同命令、边界或风险时，才创建或更新嵌套文件。
-- 同一目录存在 `AGENTS.override.md` 时，不要把被其遮蔽的 `AGENTS.md` 当作生效文件修改。若 override 与基础文件的长期意图不明确，先向用户确认应更新、移除还是保留哪一个。
 - 保持内容精简、项目特有、可验证，优先记录：
   - 项目目标和稳定的产品、兼容性或交付边界；
   - 关键目录职责、模块边界和权威信息来源；
   - 从仓库配置验证过的高频命令、非显然的适用条件和最小命令集；
   - 与变更类型对应的最小验证要求；
-  - 数据安全、生成文件、不可编辑区域和非显然的 recurring failure shields；
+  - 数据安全、生成文件、不可编辑区域和反复出现且不易察觉的失败条件；
   - 指向现有权威文档或配置的相对路径。
 - 不写入通用编程口号、完整文件树或依赖清单、易变化的类名和实现快照、当前 issue 状态、临时 workaround、未经验证的命令、尚未采用的理想实践、凭据或本机绝对路径。
 - 不复制 formatter、linter、compiler 或 CI 已能稳定执行的机械规则；记录如何调用这些工具以及项目特有的例外即可。
-- 对无法从仓库证据确认、但会实质改变长期工作方式的规则，先向用户确认，不猜测。
-- 没有符合 admission test 的 durable gap 时，不修改指引也是正确结果。
-
-## Audit Engineering Readiness
-
-仅在 comprehensive bootstrap audit 中，结合项目技术栈、交付形态和风险检查可复现构建、依赖锁定、类型或静态检查、格式化与 lint、分层测试、CI、密钥与依赖安全、license/compliance、文档、发布和回滚能力。只展开与当前项目类型有关的检查，不要因为某项工具不存在就机械判定项目不合格；先判断它是否适用、是否已有等价保障。
-
-将结果分类为：已覆盖、缺失、证据不足或不适用。合并简述不适用项，只详细展开有证据且会影响决策的风险；对缺口给出证据、实际风险、优先级和最小建议。若用户已明确授权实施某项补强，只完成最小一致变更，并遵循仓库现有架构和惯例。
+- 较长且可复用的任务流程放入 Skill；条件性细节引用现有文档，说明何时需要读取。不要创建无用的文档层或让每次任务加载整本手册。
+- 只为无法合理推断、会实质改变行为或兼容性的选择询问用户，其余在已授权范围内继续。
 
 ## Verify and Report
 
-- 核对写入 Agent 指引的路径、命令和约束都能追溯到当前仓库证据。
-- 按各个目标启动 cwd 及其 Codex 项目发现根，静态重建最终项目指引链，确认修改位于相应链内且未被遮蔽，并检查各条链不会超过实际生效的项目指引大小限制；配置或发现根仍未知时，保留未验证结论。
-- 环境具备合适的 Codex 指引来源检查能力时，在目标 cwd 的新 run/会话中验证实际加载来源；comprehensive 模式覆盖预期启动目录和存在嵌套规则时的代表性目录。当前 run 的已加载上下文不能证明修改后的文件已生效；无法进行新 run 验证时，明确报告“内容已验证，运行时加载链未验证”。
-- 在环境已就绪且不会隐式下载或改变外部状态时，运行低成本的针对性检查；需要安装依赖或扩大权限时先说明并请求授权。
-- 审查最终 diff，确认没有意外改动、敏感信息、重复或过度具体的指引。
-- Targeted 模式只报告目标指引、依据、验证和未解决问题；comprehensive 模式报告项目画像、指引变更、工程缺口及优先级、实际验证、未解决问题和建议的下一步。
-- 未达到完成条件时明确说明，不声称已经得到绝对最低 Token 消耗或保证最理想结果。
+- 核对路径、命令、条件和约束的证据；检查最终 diff、相对链接和规则冲突。按变更运行现有且符合授权的必要检查，区分执行验证与仅从配置确认。
+- 重建目标启动目录的静态指引链，检查遮蔽和实际大小限制；规则放入嵌套文件并不保证它在从根目录启动的会话中自动加载。
+- 修改生效指引后，环境允许时在目标 cwd 的新 run 验证加载来源；全面模式覆盖代表性嵌套目录。不要把提示中粘贴的规则当作启动加载证据。无法核验时报告“内容已验证，运行时加载链未验证”。
+- 定向维护报告变更、依据、验证和剩余问题；全面模式补充项目画像和按优先级排列的工程缺口。区分已确认、推断和未知；报告实际 Git 状态，不宣称绝对最优或未经实测的效率收益。

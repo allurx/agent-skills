@@ -1,22 +1,21 @@
 ---
 name: codex-efficient-engineering
-description: Optimize Codex-specific workflow decisions for existing software projects, including chat boundaries, Plan mode, Local versus Worktree, compaction, Fast Mode, and credit-aware execution. Use when the user asks how to organize or reduce the context, latency, or credit cost of Codex work, or explicitly asks to apply this workflow to a repository task. Do not use for repository onboarding, AGENTS.md creation, or ordinary implementation, debugging, refactoring, testing, or code review unless explicitly invoked to optimize the workflow.
+description: Optimize Codex workflow, context use, latency, and credit cost when requested. Choose task boundaries, planning, Local or Worktree, compaction, and speed settings. Not for routine coding or repository onboarding unless the user asks to optimize the workflow.
 metadata:
   short-description: Optimize Codex workflow, context, latency, and credits
 ---
 
 # Codex Efficient Engineering
 
-为既有软件工程选择合适的 Codex 工作组织方式和产品模式，在不牺牲正确性、必要验证或授权边界的前提下降低重复 Context、等待时间和 credit 消耗。
+为既有软件工程选择合适的 Codex 工作组织方式，在保持交付质量、必要验证和授权边界的前提下减少重复上下文、等待时间和额度消耗。效率以完成整个任务的成本衡量，不能只比较单次请求的 Token 数或单价。
 
-本 Skill 只处理 Codex workflow 决策，不重复仓库 onboarding、`AGENTS.md` 建设或通用编码流程。需要这些能力时使用相应专用 Skill 或遵循当前仓库指引。
+只展开影响当前请求的决策，不要求每次依次执行全部章节。
 
 ## Respect Scope and Authority
 
 - 区分 workflow 咨询与实际仓库任务。咨询、评估和方案请求保持只读，不修改仓库或外部状态。
-- 不擅自创建 Chat、worktree 或 branch，不切换产品模式，不 handoff、commit、push 或部署；只有用户要求且当前环境支持时才执行相应操作。
+- 建议新任务、隔离环境或模式不等于已经执行。创建用户可见的新任务、切换模型或费用设置、handoff、Git 提交和发布均遵守现有授权及工具约束；不要为了实施流程建议而额外修改全局配置。
 - 用户显式要求将本流程应用于仓库任务时，简要完成必要决策后继续任务，不先输出通用教程，也不扩大原任务范围。
-- 始终服从更高优先级指令、用户当前要求、仓库规范和实际权限。效率优化不得成为跳过必要证据或验证的理由。
 
 ## Establish the Operating Context
 
@@ -30,16 +29,15 @@ metadata:
 
 优先从当前项目和环境补全信息。只有缺失选择会实质改变结果、成本或权限时才询问用户。
 
-产品功能、支持模型、命令、价格、倍率和套餐限制会变化。具体事实影响建议时，先核对最新官方 OpenAI Docs；无法确认则明确标记为未验证，不把旧行为固化为永久规则。
+优先采用当前环境暴露的工具、模式和有效设置；只有具体产品行为影响决策时才查相应官方文档。支持模型、命令、价格、倍率和套餐限制不写成永久常量。无法核实时标明未知，不推测账户余量或将 API 计费套用为 ChatGPT credits。
 
 ## Choose the Chat Boundary
 
-- 一个 Chat 对应一个可独立验收的 outcome。同一目标下的诊断、实现、补测试和修复 review findings 留在当前 Chat。
-- 新 feature、无关 bug、独立审计或不同交付物使用 New Chat，避免旧决策和新目标相互污染。
-- 项目、仓库文档和 Agent 指引保存跨 Chat 的稳定上下文；Chat 只保留当前 outcome 所需的历史。
-- 不为每个微步骤新建 Chat。边界明显且当前环境不能自动创建时，只向用户提出一次具体切换建议。
+- 同一目标下的诊断、实现、验证和修复审查问题通常留在当前任务，避免丢失决策与授权。用户的补充、纠正和状态问题继续作用于该目标。
+- 独立交付物或无关工作适合建议新任务；是否拆分取决于上下文复用、验收和协调成本，不能只按“新 feature”或任务长度机械划分。
+- 只在得到相应授权后创建用户可见的新任务。当前目标内可独立验收的并行子任务可使用子 Agent；交代必要上下文、写入边界和验证责任，由主 Agent 整合结果。
 
-长任务在重大 milestone 或 handoff 前建立最小 checkpoint，保留：目标、约束、已确认决定、完成项、验证结果、未解决问题和下一步。
+在实际交接或容易丢失上下文的阶段保留简短交接信息：目标、约束、关键决定、已改文件、验证结果、未解决问题和下一步。不为每个微步骤创建文档。
 
 ## Choose the Planning Level
 
@@ -56,7 +54,7 @@ metadata:
 
 ## Choose Local or Worktree
 
-只有一个活跃 workflow、任务顺序执行或改动局部时默认使用 Local。
+已有任务优先沿用当前环境和用户选择。新任务再按隔离需求及当前工具默认值选择；单一顺序任务且依赖现有本地状态时，Local 通常足够。
 
 仅在 Git 仓库中且隔离确有收益时选择 Worktree，例如：
 
@@ -68,23 +66,22 @@ metadata:
 
 区分 Codex-managed worktree 与手工 `git worktree`；两者对未提交改动、detached HEAD、ignored 文件、setup 和 handoff 的行为可能不同。具体行为会影响安全性时先检查当前官方文档和实际状态，不凭通用 Git 经验猜测。不要让多个 worktree 同时 checkout 同一 branch。
 
-Worktree 只隔离工作目录，不消除逻辑冲突、共享服务冲突或 merge 成本，也不是 Token 优化工具。并行通常会增加总 compute 和 credit 消耗。
+Worktree 只隔离工作目录，不消除逻辑冲突、共享服务冲突或整合成本。并行是否节省时间取决于独立性和验证成本，总额度可能增加；不能保证省 Token。涉及当前客户端的 setup、ignored 文件复制或 handoff 时，按需查 [Worktrees 文档](https://learn.chatgpt.com/docs/environments/git-worktrees)。
 
 ## Control Compaction
 
-- 自动 compaction 接近 Context 限制时可能发生；手动 compaction 的命令和可用性取决于当前客户端。
-- 仅在长任务仍属于同一 outcome 且历史明显挤占有效 Context 时考虑手动 compact，并先保留最小 checkpoint。
-- 不频繁 compact，也不把 compaction 当作无限延长混杂 Chat 的理由。
-- 多次 compact 后若旧决策与当前状态混杂，或工作已成为独立 outcome，改用 New Chat 和最小 handoff。
-- compaction 后以当前代码、diff、测试和运行结果为事实来源，重新核对关键约束，不依赖摘要替代证据。
+- 接近上下文限制时由客户端处理自动压缩；手动命令和支持情况以当前客户端为准，不声称能从普通工具替用户切换。
+- 同一目标的长任务优先利用已有摘要继续，保留未完成工作和授权；压缩本身不代表任务结束，也不要求新建任务。
+- 历史明显挤占有效上下文且客户端支持时才考虑手动压缩。以当前代码、diff 和实际验证为事实来源，按需要复核关键约束，不每次重新扫描全仓。
+- 若工作已独立或旧决策混杂，再建议新任务并准备最小交接信息；不要按压缩次数设置硬阈值。
 
 ## Choose Standard or Fast Mode
 
-额度敏感、后台长任务、完整验证或等待时间不是主要瓶颈时优先 Standard。
+先区分模型能力、reasoning effort 和速度档位。保留用户明确的模型选择；改变模型与开启同一模型的 Fast 是不同决策。不能仅因低单价就推断任务总成本更低，也不能把必要验证绑定到某种速度档位。
 
-只有低延迟能明显降低人工等待或协作成本，且额外 credit 消耗可接受时考虑 Fast Mode，例如高频交互式修改或紧急诊断。Fast Mode 用更高 credit 消耗换取较低延迟，不是 Token 或额度优化手段。
+额度优先且延迟不是主要瓶颈时倾向 Standard；人工等待成本显著且额外额度可接受时考虑 Fast。Fast 用更高额度消耗换取较低延迟，不等于换用一个能力更低的模型。
 
-建议 Fast Mode 前核对当前模型支持情况、倍率、套餐余量和 usage dashboard。使用 API key 时按 API processing tier 与 token pricing 评估，不套用 ChatGPT credit 规则。
+作具体费用建议时核对当前 [Speed 文档](https://learn.chatgpt.com/docs/agent-configuration/speed) 中的支持情况与倍率；账户余量使用当前可用的 usage 工具或用户提供的数据。API key 按 API processing tier 和 token pricing 单独评估。
 
 ## Deliver the Decision
 

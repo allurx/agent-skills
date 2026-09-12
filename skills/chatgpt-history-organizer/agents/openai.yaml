@@ -1,4 +1,4 @@
 interface:
   display_name: "ChatGPT 聊天整理"
   short_description: "按授权范围审计聊天标题和项目归属，支持局部与全量整理"
-  default_prompt: "使用 $chatgpt-history-organizer 全量整理我的 ChatGPT 聊天记录，修正标题并归入合适项目。"
+  default_prompt: "使用 $chatgpt-history-organizer 整理我当前未归类的 ChatGPT 聊天，核对内容后修正标题并归入合适的现有私有项目。"
