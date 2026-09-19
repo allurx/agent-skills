@@ -7,7 +7,6 @@
 | Skill | 用途 |
 | --- | --- |
 | [`instruction-structurer`](skills/instruction-structurer/SKILL.md) | 拆分并分类已有指令，改善查找并保留原意 |
-| [`chatgpt-history-organizer`](skills/chatgpt-history-organizer/SKILL.md) | 根据内容审计、重命名和归类 ChatGPT 网页聊天 |
 | [`staged-candid-character-photographer`](skills/staged-candid-character-photographer/SKILL.md) | 引导设置人物摄影参数，生成图片或提示词 |
 
 ## 安装
@@ -27,4 +26,4 @@
 ### 注意事项
 
 - 副本不会自动更新；更新前备份本地定制，再替换完整目录。同一技能只保留一个可发现入口。
-- 聊天整理需要访问已登录的 ChatGPT 网页，实际出图需要宿主提供图像生成能力。
+- 实际出图需要宿主提供图像生成能力。
