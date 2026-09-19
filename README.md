@@ -7,7 +7,6 @@
 | Skill | 用途 |
 | --- | --- |
 | [`instruction-structurer`](skills/instruction-structurer/SKILL.md) | 拆分并分类已有指令，改善查找并保留原意 |
-| [`agent-project-bootstrap`](skills/agent-project-bootstrap/SKILL.md) | 审计项目接入条件，创建或完善 `AGENTS.md` |
 | [`chatgpt-history-organizer`](skills/chatgpt-history-organizer/SKILL.md) | 根据内容审计、重命名和归类 ChatGPT 网页聊天 |
 | [`staged-candid-character-photographer`](skills/staged-candid-character-photographer/SKILL.md) | 引导设置人物摄影参数，生成图片或完整提示词 |
 
