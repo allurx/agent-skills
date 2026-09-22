@@ -12,6 +12,8 @@ node scripts/markdown-tree-view.mjs --input README.md --output work/readme.html
 
 使用启用 JavaScript 的现代浏览器打开 `work/readme.html`，无需启动服务器。点击标题或顶部按钮展开、折叠章节；标题获得焦点后，可用方向键导航、`Home` / `End` 跳转、`Enter` / `Space` 切换展开状态。
 
+文档树独立滚动，品牌栏、文件名与操作区在滚动时保持可见；点击 **操作帮助** 可查看键盘和源行号说明。页面默认跟随系统配色，可通过配色按钮切换明暗模式，刷新后恢复跟随系统。
+
 检查已有 HTML 是否与当前输入和转换器一致，或查看参数说明：
 
 ```sh

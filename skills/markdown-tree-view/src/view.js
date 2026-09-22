@@ -1,6 +1,59 @@
 (() => {
   "use strict";
 
+  const themeToggle = document.getElementById("theme-toggle");
+  if (themeToggle) {
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+    const isDark = () => document.documentElement.dataset.theme
+      ? document.documentElement.dataset.theme === "dark"
+      : systemTheme.matches;
+    const syncThemeLabel = () => {
+      const label = isDark() ? "切换到浅色模式" : "切换到深色模式";
+      themeToggle.setAttribute("aria-label", label);
+      themeToggle.title = label;
+    };
+    themeToggle.addEventListener("click", () => {
+      document.documentElement.dataset.theme = isDark() ? "light" : "dark";
+      syncThemeLabel();
+    });
+    systemTheme.addEventListener("change", () => {
+      if (!document.documentElement.dataset.theme) syncThemeLabel();
+    });
+    syncThemeLabel();
+    themeToggle.hidden = false;
+  }
+
+  const helpToggle = document.getElementById("help-toggle");
+  const helpPanel = document.getElementById("reading-help");
+  if (helpToggle && helpPanel) {
+    const helpContent = helpPanel.querySelector(".help-content");
+    const setHelpOpen = (open) => {
+      helpPanel.hidden = !open;
+      helpToggle.setAttribute("aria-expanded", String(open));
+    };
+    const closeHelp = () => {
+      setHelpOpen(false);
+      helpToggle.focus({ preventScroll: true });
+    };
+    helpToggle.hidden = false;
+    helpToggle.addEventListener("click", () => {
+      const open = helpPanel.hidden;
+      setHelpOpen(open);
+      if (open) helpContent.focus({ preventScroll: true });
+    });
+    helpPanel.querySelector(".help-close").addEventListener("click", closeHelp);
+    const dismissOutside = (event) => {
+      if (!helpPanel.hidden && !helpPanel.contains(event.target) && !helpToggle.contains(event.target)) setHelpOpen(false);
+    };
+    document.addEventListener("pointerdown", dismissOutside);
+    document.addEventListener("focusin", dismissOutside);
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || helpPanel.hidden) return;
+      event.preventDefault();
+      closeHelp();
+    });
+  }
+
   const tree = document.getElementById("document-tree");
   const toggleAll = document.getElementById("toggle-all");
   if (!tree || !toggleAll) return;
