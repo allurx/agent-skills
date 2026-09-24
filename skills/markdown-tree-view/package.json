@@ -1,15 +1,45 @@
 {
-  "name": "markdown-tree-view",
-  "version": "0.1.0",
-  "description": "Convert a Markdown document into a self-contained offline HTML tree.",
-  "private": true,
-  "type": "module",
-  "license": "UNLICENSED",
-  "engines": { "node": ">=24" },
-  "bin": { "markdown-tree-view": "bin/markdown-tree-view.mjs" },
-  "scripts": {
-    "build:skill": "node scripts/build-skill.mjs"
-  },
-  "dependencies": { "markdown-it": "15.0.2" },
-  "devDependencies": { "esbuild": "0.28.2" }
+    "name": "markdown-tree-view",
+    "version": "1.0.0",
+    "description": "Convert a Markdown document into a self-contained offline HTML tree.",
+    "private": true,
+    "type": "module",
+    "license": "MIT",
+    "engines": {
+        "node": ">=24"
+    },
+    "bin": {
+        "markdown-tree-view": "scripts/markdown-tree-view.mjs"
+    },
+    "scripts": {
+        "format": "prettier src/**/*.ts build.ts eslint.config.mjs tsconfig*.json package.json --write",
+        "format:check": "prettier src/**/*.ts build.ts eslint.config.mjs tsconfig*.json package.json --check",
+        "lint": "eslint src build.ts",
+        "type-check": "tsc --noEmit && tsc -p tsconfig.browser.json",
+        "check": "npm run format:check && npm run lint && npm run type-check",
+        "build": "node build.ts",
+        "verify": "npm run check && npm run build && npm run build -- --check"
+    },
+    "dependencies": {
+        "markdown-it": "15.0.2"
+    },
+    "devDependencies": {
+        "@eslint/js": "10.0.1",
+        "@types/node": "26.6.2",
+        "@typescript/native": "npm:typescript@7.0.2",
+        "esbuild": "0.28.2",
+        "eslint": "10.11.0",
+        "prettier": "3.9.9",
+        "typescript": "npm:@typescript/typescript6@6.0.2",
+        "typescript-eslint": "8.70.1"
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "printWidth": 120,
+        "semi": true,
+        "singleQuote": false,
+        "endOfLine": "lf",
+        "embeddedLanguageFormatting": "auto",
+        "trailingComma": "es5"
+    }
 }

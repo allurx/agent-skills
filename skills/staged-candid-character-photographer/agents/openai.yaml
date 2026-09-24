@@ -1,4 +1,4 @@
 interface:
-  display_name: "引导式角色摄影师"
+  display_name: "角色写真生成"
   short_description: "从姓名、角色名或参考图开始，逐项选择场景、着装、动作、表情与镜头，汇总后生成图片"
-  default_prompt: "使用 $staged-candid-character-photographer 为我指定的人物制作图片，保留我已提供的姓名、角色或参考图，逐项引导我选择缺失的摄影参数，完成后生成。"
+  default_prompt: "使用 $staged-candid-character-photographer 为我指定的人物制作图片，保留已提供的信息，引导我补齐缺失的摄影参数，汇总后生成。"

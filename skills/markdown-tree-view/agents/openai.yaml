@@ -1,0 +1,4 @@
+interface:
+  display_name: "Markdown 折叠树"
+  short_description: "将 Markdown 转换为保留正文、顺序和标题层级的离线 HTML 折叠树"
+  default_prompt: "使用 $markdown-tree-view 将我指定的 Markdown 文件转换为离线 HTML 折叠树，保留正文、顺序和标题层级，并检查输出与输入一致。"

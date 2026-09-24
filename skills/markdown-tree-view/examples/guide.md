@@ -39,10 +39,10 @@ The following is a code sample. Its `#` characters are not document headings.
 
 ```shell
 # Generate an offline page.
-node bin/markdown-tree-view.mjs --input examples/guide.md --output work/guide.html
+node scripts/markdown-tree-view.mjs --input examples/guide.md --output work/guide.html
 
 # Check whether that page is current, without writing files.
-node bin/markdown-tree-view.mjs --input examples/guide.md --output work/guide.html --check
+node scripts/markdown-tree-view.mjs --input examples/guide.md --output work/guide.html --check
 ```
 
 Special characters remain readable: `<tag>`, `A & B`, `"quotes"`, and Unicode such as 中文 and 🌿.

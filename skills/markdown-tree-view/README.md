@@ -1,10 +1,10 @@
-# Markdown Tree View
+# Markdown 折叠树
 
 将单个 UTF-8 Markdown 文件转换为独立的离线 HTML 折叠树，保留正文、顺序和真实标题层级，适用于 `AGENTS.md`、`CLAUDE.md`、README 和规范文档。可通过 Skill 或 Node.js CLI 使用，生成的 HTML 内嵌样式与脚本。
 
 ## 快速上手
 
-需要 Node.js 24 或更新版本。随附脚本已包含运行依赖，无需 npm 安装。在本 Skill 根目录执行：
+需要 Node.js 24 或更新版本。`scripts/` 存放供 Skill 执行的构建成品，仅包含一个已内嵌运行依赖、页面资源和许可证的 `markdown-tree-view.mjs`。可以单独复制这个文件使用，无需源码或 npm 安装。在本 Skill 根目录执行：
 
 ```sh
 node scripts/markdown-tree-view.mjs --input README.md --output work/readme.html
@@ -35,8 +35,6 @@ node scripts/markdown-tree-view.mjs --help
 使用 $markdown-tree-view，将 ./AGENTS.md 转换为 ./work/agents-tree.html。
 ```
 
-第三方依赖的许可证见 [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt)。
-
 ## 支持范围
 
 支持常见 Markdown 标题、段落、列表、引用、代码块、表格和任务列表，参见[示例文档](examples/guide.md)。支持重复标题、跳级标题和无标题文档；跳级标题归入最近的较低级标题，不补造层级。只有文档级标题生成树节点，列表和引用内的标题保留在正文中。
@@ -54,10 +52,19 @@ Node.js 开发基线见 [.node-version](.node-version)。在本 Skill 根目录�
 
 ```sh
 npm ci
-npm run build:skill
-npm run build:skill -- --check
+npm run verify
 ```
 
-构建更新 `scripts/markdown-tree-view.mjs` 和 `THIRD-PARTY-NOTICES.txt`；`--check` 只检查它们与当前源码是否一致，不写文件。修改源码后应同步更新这两个生成物，保持完整目录可直接安装使用。
+源码使用严格 TypeScript，Node.js 与浏览器分别检查类型。`npm run check` 执行格式、类型感知 lint 和类型检查；`npm run format` 格式化维护代码与配置。`npm run verify` 完成检查、构建及构建产物一致性校验。
 
-CLI 入口为 [bin/markdown-tree-view.mjs](bin/markdown-tree-view.mjs)，实现位于 [src/](src/)，构建入口为 [scripts/build-skill.mjs](scripts/build-skill.mjs)，Skill 指令维护于 [SKILL.md](SKILL.md)。
+类型检查使用 TypeScript 7 的 `tsc`；类型感知 ESLint 使用官方 TypeScript 6 API 兼容包，两者通过 [Microsoft 推荐的 npm alias 方案](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6-0)并行安装。
+
+`npm run build` 生成 `scripts/markdown-tree-view.mjs`，同时同步仓库中的 `THIRD-PARTY-NOTICES.txt`；追加 `-- --check` 只检查它们与当前源码是否一致，不写文件。`scripts/` 仅放构建成品，不混入构建脚本或其他文件；构建发现额外内容时会报错，不自动删除。修改源码后同步更新生成物，保持完整 Skill 目录可直接安装使用。
+
+全部运行源码位于 [src/](src/)，CLI 入口为 [src/cli.ts](src/cli.ts)，构建入口为根目录的 [build.ts](build.ts)，Skill 指令维护于 [SKILL.md](SKILL.md)。安装开发依赖后，可用 `node src/cli.ts` 搭配同一组 CLI 参数调试。浏览器 TypeScript 会编译为内嵌 JavaScript，安装使用仍仅需 Node.js，无需 TypeScript 工具链。
+
+## 许可证
+
+本工具的自有代码、Skill 指令、文档和示例采用 [MIT 许可证](LICENSE.txt)。第三方依赖保留其原有许可，声明见 [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt)。
+
+构建的独立 CLI 脚本自动携带本工具许可和第三方声明，生成的 HTML 自动携带本工具许可。HTML 中的许可仅覆盖页面模板、样式和脚本；输入 Markdown 及其转换后的文档内容仍按原有授权处理，不会自动采用 MIT。
