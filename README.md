@@ -6,13 +6,13 @@
 
 | Skill | 用途 |
 | --- | --- |
-| [`instruction-structurer`](skills/instruction-structurer/SKILL.md) | 拆分并分类已有指令，改善查找并保留原意 |
-| [`markdown-tree-view`](skills/markdown-tree-view/SKILL.md) | 将 Markdown 转换为保留内容和标题层级的离线 HTML 折叠树 |
-| [`staged-candid-character-photographer`](skills/staged-candid-character-photographer/SKILL.md) | 引导设置人物摄影参数，生成图片或提示词 |
+| [`instruction-structurer`](skills/instruction-structurer/README.md) | 拆分并分类已有指令，改善查找并保留原意 |
+| [`markdown-tree-view`](skills/markdown-tree-view/README.md) | 将 Markdown 转换为保留内容和标题层级的离线 HTML 折叠树 |
+| [`staged-candid-character-photographer`](skills/staged-candid-character-photographer/README.md) | 引导设置人物摄影参数，生成图片或提示词 |
 
 ## 安装
 
-从选定的 commit 下载所需的 `skills/<skill-name>/` 完整目录，以副本形式放入 Codex 用户技能目录 `~/.agents/skills/`。其他宿主使用其规定的安装位置。详见[官方技能文档](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills)。
+安装或更新前，先阅读上表中目标 Skill 的 README 及其引用的安装说明，再选择安装方式。`markdown-tree-view` 需从源码构建完整交付目录；另外两个纯文档 Skill 可直接安装各自的完整目录。具体步骤在各 Skill 中维护。
 
 ## 使用
 
@@ -26,8 +26,6 @@
 
 ### 注意事项
 
-- 副本不会自动更新；更新前备份本地定制，再替换完整目录。同一技能只保留一个可发现入口。
-- `markdown-tree-view` 需要 Node.js 24 或更新版本；随附脚本已包含运行依赖，使用时无需 npm 安装。
 - 实际出图需要宿主提供图像生成能力。
 
 ## 许可证

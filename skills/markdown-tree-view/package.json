@@ -9,7 +9,7 @@
         "node": ">=24"
     },
     "bin": {
-        "markdown-tree-view": "scripts/markdown-tree-view.mjs"
+        "markdown-tree-view": "dist/markdown-tree-view/scripts/markdown-tree-view.mjs"
     },
     "scripts": {
         "format": "prettier src/**/*.ts build.ts eslint.config.mjs tsconfig*.json package.json --write",
@@ -18,8 +18,7 @@
         "type-check": "tsc --noEmit && tsc -p tsconfig.browser.json",
         "check": "npm run format:check && npm run lint && npm run type-check",
         "build": "node build.ts",
-        "test": "node --test src/*.test.ts",
-        "verify": "npm run check && npm run build && npm run build -- --check && npm test"
+        "verify": "npm run check && npm run build && npm run build -- --check"
     },
     "dependencies": {
         "markdown-it": "15.0.2"

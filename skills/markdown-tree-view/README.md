@@ -2,9 +2,13 @@
 
 将单个 UTF-8 Markdown 文件转换为独立的离线 HTML 折叠树，保留正文、顺序和真实标题层级，适用于 `AGENTS.md`、`CLAUDE.md`、README 和规范文档。可通过 Skill 或 Node.js CLI 使用，生成的 HTML 内嵌样式、脚本和默认图标。
 
+## 安装
+
+运行需要 Node.js 24 或更新版本。首次安装和更新按[安装说明](docs/installation.md)执行：从源码构建时，只安装生成的 `dist/markdown-tree-view/` 完整目录。安装后无需源码、开发依赖或 npm 安装。
+
 ## 快速上手
 
-需要 Node.js 24 或更新版本。`scripts/` 存放供 Skill 执行的构建成品，仅包含一个已内嵌运行依赖、页面资源和许可证的 `markdown-tree-view.mjs`。可以单独复制这个文件使用，无需源码或 npm 安装。在本 Skill 根目录执行：
+在已安装的 Skill 根目录执行：
 
 ```sh
 node scripts/markdown-tree-view.mjs --input README.md --output work/readme.html
@@ -31,7 +35,7 @@ node scripts/markdown-tree-view.mjs --help
 
 ## Skill 使用
 
-将仓库中的 `skills/markdown-tree-view/` 整个目录放入 Agent 的 Skill 目录，不能只复制 `SKILL.md`。调用示例：
+完成安装后，按名称调用：
 
 ```text
 使用 $markdown-tree-view，将 ./AGENTS.md 转换为 ./work/agents-tree.html。
@@ -48,26 +52,14 @@ node scripts/markdown-tree-view.mjs --help
 - 脚注、数学公式、Mermaid、YAML front matter 没有专门的渲染支持，按普通 Markdown 或代码文字显示。
 - 折叠章节的内容仍包含在 HTML 中，会随文件一起分享。
 - 默认 favicon 通过 data URI 内嵌，优先使用 SVG，并提供 ICO 兼容回退；发布时无需额外图标文件或修改 HTML、CSP。不支持 data URI favicon 的旧浏览器可能不显示图标；不支持 `theme-color` 的浏览器会忽略它，不影响阅读。
+- 默认 CSP 仅允许页面自带资源。发布到启用 Cloudflare Web Analytics 的站点时，按[托管说明](docs/hosting.md)选择关闭注入或使用显式兼容选项；生成和 `--check` 必须使用相同选项。
 
 ## 开发
 
-Node.js 开发基线见 [.node-version](.node-version)。在本 Skill 根目录执行：
-
-```sh
-npm ci
-npm run verify
-```
-
-源码使用严格 TypeScript，Node.js 与浏览器分别检查类型。`npm run check` 执行格式、类型感知 lint 和类型检查；`npm run format` 格式化维护代码与配置。`npm run verify` 完成检查、构建、测试及构建产物一致性校验。
-
-类型检查使用 TypeScript 7 的 `tsc`；类型感知 ESLint 使用官方 TypeScript 6 API 兼容包，两者通过 [Microsoft 推荐的 npm alias 方案](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6-0)并行安装。
-
-`npm run build` 生成 `scripts/markdown-tree-view.mjs`，将 [assets/](assets/) 中的默认图标打包进独立 CLI，同时同步仓库中的 `THIRD-PARTY-NOTICES.txt`；追加 `-- --check` 只检查它们与当前源码和资源是否一致，不写文件。`scripts/` 仅放构建成品，不混入构建脚本或其他文件；构建发现额外内容时会报错，不自动删除。修改源码或资源后同步更新生成物，保持完整 Skill 目录可直接安装使用。
-
-全部运行源码位于 [src/](src/)，CLI 入口为 [src/cli.ts](src/cli.ts)，构建入口为根目录的 [build.ts](build.ts)，Skill 指令维护于 [SKILL.md](SKILL.md)。安装开发依赖后，可用 `node src/cli.ts` 搭配同一组 CLI 参数调试。浏览器 TypeScript 会编译为内嵌 JavaScript，安装使用仍仅需 Node.js，无需 TypeScript 工具链。
+维护工程与安装目录分离。源码、构建与检查命令见[源码仓库中的开发说明](https://github.com/allurx/agent-skills/blob/main/skills/markdown-tree-view/DEVELOPMENT.md)。开发文件不随 Skill 安装目录交付。
 
 ## 许可证
 
-本工具的自有代码、Skill 指令、文档和示例采用 [MIT 许可证](LICENSE.txt)。第三方依赖保留其原有许可，声明见 [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt)。
+本工具的自有代码、Skill 指令、文档和示例采用 [MIT 许可证](LICENSE.txt)。第三方依赖保留其原有许可；构建交付目录中的 `THIRD-PARTY-NOTICES.txt` 包含完整声明。
 
 构建的独立 CLI 脚本自动携带本工具许可和第三方声明，生成的 HTML 自动携带本工具许可。HTML 中的许可仅覆盖页面模板、样式和脚本；输入 Markdown 及其转换后的文档内容仍按原有授权处理，不会自动采用 MIT。

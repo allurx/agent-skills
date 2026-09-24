@@ -6,20 +6,43 @@ import { fileURLToPath } from "node:url";
 const root = resolve(fileURLToPath(new URL("./", import.meta.url)));
 const args = process.argv.slice(2);
 const bundleName = "markdown-tree-view.mjs";
+const distribution = join(root, "dist/markdown-tree-view");
+const includedFiles = [
+    "SKILL.md",
+    "README.md",
+    "LICENSE.txt",
+    "docs/installation.md",
+    "docs/hosting.md",
+    "agents/openai.yaml",
+    "examples/guide.md",
+];
 
-function verifyDistributionDirectory(): void {
-    const directory = join(root, "scripts");
-    const metadata = lstatSync(directory, { throwIfNoEntry: false });
-    if (!metadata) return;
-    if (!metadata.isDirectory()) throw new Error(`Distribution must be a regular directory: ${directory}`);
-    const unexpected = readdirSync(directory, { withFileTypes: true }).filter(
-        (entry) => entry.name !== bundleName || !entry.isFile()
-    );
-    if (unexpected.length) {
-        throw new Error(
-            `Distribution may contain only ${bundleName}. Inspect unexpected entries: ${unexpected.map((entry) => entry.name).join(", ")}`
-        );
+function distributionIssues(files: Map<string, Buffer>): string[] {
+    for (const directory of [dirname(distribution), distribution]) {
+        const metadata = lstatSync(directory, { throwIfNoEntry: false });
+        if (metadata && !metadata.isDirectory())
+            throw new Error(`Distribution must use regular directories: ${directory}`);
     }
+    const directories = new Set<string>();
+    for (const relative of files.keys()) {
+        let directory = dirname(relative).replaceAll("\\", "/");
+        while (directory !== ".") {
+            directories.add(directory);
+            directory = dirname(directory).replaceAll("\\", "/");
+        }
+    }
+    const issues: string[] = [];
+    function inspect(relative: string): void {
+        const directory = join(distribution, relative);
+        if (!lstatSync(directory, { throwIfNoEntry: false })) return;
+        for (const entry of readdirSync(directory, { withFileTypes: true })) {
+            const child = relative ? `${relative}/${entry.name}` : entry.name;
+            if (entry.isDirectory() && directories.has(child)) inspect(child);
+            else if (!(entry.isFile() && files.has(child))) issues.push(`Unexpected entry: ${child}`);
+        }
+    }
+    inspect("");
+    return issues;
 }
 
 function dependencyDirectory(input: string): string | undefined {
@@ -70,12 +93,11 @@ try {
     if (args.length > 1 || (args.length === 1 && args[0] !== "--check"))
         throw new Error("Usage: npm run build -- [--check]");
     const check = args.includes("--check");
-    verifyDistributionDirectory();
     const { css, script, license, faviconSvg, faviconIco } = await import("./src/assets.ts");
     const result = await build({
         absWorkingDir: root,
         entryPoints: [join(root, "src/cli.ts")],
-        outfile: `scripts/${bundleName}`,
+        outfile: join(distribution, `scripts/${bundleName}`),
         bundle: true,
         platform: "node",
         format: "esm",
@@ -108,12 +130,18 @@ try {
     if (licenseText.includes("*/")) throw new Error("License text cannot be safely embedded in a JavaScript comment.");
     const standalone = Buffer.from(`${bundle.text}\n/*!\n${licenseText}\n*/\n`, "utf8");
     const files = new Map([
+        ...includedFiles.map((relative): [string, Buffer] => [relative, readFileSync(join(root, relative))]),
         [`scripts/${bundleName}`, standalone],
         ["THIRD-PARTY-NOTICES.txt", Buffer.from(notices, "utf8")],
     ]);
+    const issues = distributionIssues(files);
+    if (issues.length) {
+        for (const issue of issues) console.error(issue);
+        throw new Error("Inspect unexpected distribution entries before rebuilding; no files were changed.");
+    }
     let mismatch = false;
     for (const [relative, expected] of files) {
-        const path = join(root, relative);
+        const path = join(distribution, relative);
         let current: Buffer | undefined;
         try {
             current = readFileSync(path);
@@ -130,7 +158,7 @@ try {
         }
     }
     if (mismatch) process.exitCode = 1;
-    else console.log(`${check ? "Up to date" : "Built"}: markdown-tree-view`);
+    else console.log(`${check ? "Up to date" : "Built"}: dist/markdown-tree-view/`);
 } catch (error) {
     console.error(`build: ${error instanceof Error ? error.message : String(error)}`);
     process.exitCode = 2;

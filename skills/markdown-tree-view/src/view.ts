@@ -1,9 +1,9 @@
 function initializeView(): void {
-    const themeToggle = document.getElementById("theme-toggle");
-    const helpToggle = document.getElementById("help-toggle");
-    const helpPanel = document.getElementById("reading-help");
-    const tree = document.getElementById("document-tree");
-    const toggleAll = document.getElementById("toggle-all");
+    const themeToggle = document.getElementById("mtv:theme-toggle");
+    const helpToggle = document.getElementById("mtv:help-toggle");
+    const helpPanel = document.getElementById("mtv:reading-help");
+    const tree = document.getElementById("mtv:document-tree");
+    const toggleAll = document.getElementById("mtv:toggle-all");
     if (
         !(themeToggle instanceof HTMLButtonElement) ||
         !(helpToggle instanceof HTMLButtonElement) ||

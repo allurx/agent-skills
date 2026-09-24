@@ -9,6 +9,7 @@ interface DocumentSection {
 export interface HeadingSection extends DocumentSection {
     id: string;
     alias: string;
+    anchor?: string;
     level: number;
     line: number;
     endLine: number;
@@ -30,6 +31,9 @@ const htmlEntities: Record<string, string> = {
     '"': "&quot;",
     "'": "&#39;",
 };
+
+// Preserve previously generated aliases while freeing these names for heading links.
+const legacyControlIds = new Set(["document-tree", "toggle-all", "theme-toggle", "help-toggle", "reading-help"]);
 
 export function escapeHtml(value: unknown): string {
     return String(value).replace(/[&<>"']/gu, (char) => htmlEntities[char] ?? char);
@@ -143,7 +147,8 @@ export function parseDocument(markdown: string): ParsedDocument {
     const root: DocumentSection = { children: [], tokens: [] };
     const stack: HeadingSection[] = [];
     const nodes: HeadingSection[] = [];
-    const usedIds = new Set(["document-tree", "toggle-all", "theme-toggle", "help-toggle", "reading-help"]);
+    const usedIds = new Set(legacyControlIds);
+    const availableControlAnchors = new Set(legacyControlIds);
     for (let i = 0; i < tokens.length; i++) {
         const token = rendererToken(tokens, i);
         if (token.type !== "heading_open" || token.level !== 0) {
@@ -192,6 +197,7 @@ export function parseDocument(markdown: string): ParsedDocument {
         nextSuffix.set(base, suffix);
         usedIds.add(alias);
         node.alias = alias;
+        if (availableControlAnchors.delete(base)) node.anchor = base;
     }
     return { md, env, root, nodes };
 }

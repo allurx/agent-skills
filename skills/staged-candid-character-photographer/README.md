@@ -2,6 +2,12 @@
 
 从人物姓名、角色名或人物参考图开始，引导选择摄影参数，汇总后生成图片。支持写实写真、真人 COS 和二次元人像；真人各风格共用严格的摄影真实性要求，构图按用途、动作和场地适配。
 
+## 安装
+
+从选定的源码版本取得完整 `skills/staged-candid-character-photographer/` 目录，以副本形式放入 Codex 用户技能目录 `~/.agents/skills/staged-candid-character-photographer/`，或其他宿主规定的位置。此 Skill 是纯文档工作流，无需构建或安装依赖；保留 [manifest.txt](manifest.txt) 列出的全部文件。实际出图需要宿主提供图像生成能力。
+
+更新前将既有目录及本地定制备份到 Skill 搜索范围之外，再用新目录替换；不要合并复制而遗留旧文件。同一 Skill 只保留一个可发现入口，重新开启任务后核对加载的路径。安装位置及发现规则见[Codex 官方技能文档](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills)。
+
 ## 使用
 
 调用本 Skill 后提供人物姓名、角色名或人物参考图，例如：
