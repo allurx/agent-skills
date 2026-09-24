@@ -71,7 +71,7 @@ try {
         throw new Error("Usage: npm run build -- [--check]");
     const check = args.includes("--check");
     verifyDistributionDirectory();
-    const { css, script, license } = await import("./src/assets.ts");
+    const { css, script, license, faviconSvg, faviconIco } = await import("./src/assets.ts");
     const result = await build({
         absWorkingDir: root,
         entryPoints: [join(root, "src/cli.ts")],
@@ -86,6 +86,8 @@ try {
             BUNDLED_CSS: JSON.stringify(css),
             BUNDLED_JS: JSON.stringify(script),
             BUNDLED_LICENSE: JSON.stringify(license),
+            BUNDLED_FAVICON_SVG: JSON.stringify(faviconSvg),
+            BUNDLED_FAVICON_ICO: JSON.stringify(faviconIco),
         },
     });
     const packages = [

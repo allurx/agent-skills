@@ -1,30 +1,44 @@
 function initializeView(): void {
     const themeToggle = document.getElementById("theme-toggle");
-    if (themeToggle) {
+    const helpToggle = document.getElementById("help-toggle");
+    const helpPanel = document.getElementById("reading-help");
+    const tree = document.getElementById("document-tree");
+    const toggleAll = document.getElementById("toggle-all");
+    if (
+        !(themeToggle instanceof HTMLButtonElement) ||
+        !(helpToggle instanceof HTMLButtonElement) ||
+        !helpPanel ||
+        !tree ||
+        !(toggleAll instanceof HTMLButtonElement)
+    )
+        return;
+
+    {
         const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
         const isDark = () =>
             document.documentElement.dataset["theme"]
                 ? document.documentElement.dataset["theme"] === "dark"
                 : systemTheme.matches;
-        const syncThemeLabel = () => {
+        const syncTheme = () => {
             const label = isDark() ? "切换到浅色模式" : "切换到深色模式";
             themeToggle.setAttribute("aria-label", label);
             themeToggle.title = label;
+            const color = getComputedStyle(document.documentElement).getPropertyValue("--background").trim();
+            for (const meta of document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')) {
+                meta.content = color;
+            }
         };
         themeToggle.addEventListener("click", () => {
             document.documentElement.dataset["theme"] = isDark() ? "light" : "dark";
-            syncThemeLabel();
+            syncTheme();
         });
         systemTheme.addEventListener("change", () => {
-            if (!document.documentElement.dataset["theme"]) syncThemeLabel();
+            if (!document.documentElement.dataset["theme"]) syncTheme();
         });
-        syncThemeLabel();
-        themeToggle.hidden = false;
+        syncTheme();
     }
 
-    const helpToggle = document.getElementById("help-toggle");
-    const helpPanel = document.getElementById("reading-help");
-    if (helpToggle && helpPanel) {
+    {
         const helpContent = helpPanel.querySelector<HTMLElement>(".help-content");
         const setHelpOpen = (open: boolean) => {
             helpPanel.hidden = !open;
@@ -34,7 +48,6 @@ function initializeView(): void {
             setHelpOpen(false);
             helpToggle.focus({ preventScroll: true });
         };
-        helpToggle.hidden = false;
         helpToggle.addEventListener("click", () => {
             const open = Boolean(helpPanel.hidden);
             setHelpOpen(open);
@@ -55,11 +68,13 @@ function initializeView(): void {
         });
     }
 
-    const tree = document.getElementById("document-tree");
-    const toggleAll = document.getElementById("toggle-all");
-    if (!tree || !(toggleAll instanceof HTMLButtonElement)) return;
-
     initializeTree(tree, toggleAll);
+    // Expose enhancements only after every control has initialized successfully.
+    themeToggle.disabled = false;
+    helpToggle.disabled = false;
+    themeToggle.hidden = false;
+    helpToggle.hidden = false;
+    toggleAll.hidden = false;
 }
 
 function initializeTree(tree: HTMLElement, toggleAll: HTMLButtonElement): void {

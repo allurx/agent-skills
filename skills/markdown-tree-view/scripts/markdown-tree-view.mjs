@@ -300,7 +300,8 @@ var package_default = {
     "type-check": "tsc --noEmit && tsc -p tsconfig.browser.json",
     check: "npm run format:check && npm run lint && npm run type-check",
     build: "node build.ts",
-    verify: "npm run check && npm run build && npm run build -- --check"
+    test: "node --test src/*.test.ts",
+    verify: "npm run check && npm run build && npm run build -- --check && npm test"
   },
   dependencies: {
     "markdown-it": "15.0.2"
@@ -327,9 +328,218 @@ var package_default = {
 };
 
 // src/assets.ts
+var faviconSvg = true ? "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSI+CiAgPHRpdGxlPkNvZGV4IGRvY3VtZW50IHRyZWU8L3RpdGxlPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE0IiBmaWxsPSIjMWIxYTE2Ii8+CiAgPGcgc3Ryb2tlPSIjZDVhZDU1IiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8cGF0aCBkPSJNMzYgMTFIMTlhNCA0IDAgMCAwLTQgNHYzNGE0IDQgMCAwIDAgNCA0aDI2YTQgNCAwIDAgMCA0LTRWMjRMMzYgMTFaIi8+CiAgICA8cGF0aCBkPSJNMzYgMTF2MTNoMTMiLz4KICAgIDxwYXRoIGQ9Ik0yNSAyOHYxN2gxMU0yNSAzNmgxMSIvPgogIDwvZz4KICA8ZyBmaWxsPSIjZDVhZDU1Ij4KICAgIDxjaXJjbGUgY3g9IjI1IiBjeT0iMjgiIHI9IjMiLz4KICAgIDxjaXJjbGUgY3g9IjM3IiBjeT0iMzYiIHI9IjMiLz4KICAgIDxjaXJjbGUgY3g9IjM3IiBjeT0iNDUiIHI9IjMiLz4KICA8L2c+Cjwvc3ZnPgo=" : `data:image/svg+xml;base64,${readFileSync(new URL("../assets/favicon.svg", import.meta.url)).toString("base64")}`;
+var faviconIco = true ? "data:image/vnd.microsoft.icon;base64,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" : `data:image/vnd.microsoft.icon;base64,${readFileSync(new URL("../assets/favicon.ico", import.meta.url)).toString("base64")}`;
 var license = true ? 'MIT License\n\nCopyright (c) 2026 allurx\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the "Software"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.' : readFileSync(new URL("../LICENSE.txt", import.meta.url), "utf8").replace(/\r\n?/gu, "\n").trim();
 var css = true ? ':root {\n  color-scheme: light;\n  --background: #f7f6f2;\n  --surface: #fffefa;\n  --text: #292822;\n  --muted: #686359;\n  --border: #e5e0d6;\n  --guide: #dfd9cf;\n  --hover: #f5f2eb;\n  --selected: #f2eee4;\n  --accent: #8b611d;\n  --focus: #8b611d;\n  --link: #855a17;\n  --code: #f4f1eb;\n  --indent: 18px;\n}\n\n@media (prefers-color-scheme: dark) {\n  :root:where(:not([data-theme="light"])) {\n    color-scheme: dark;\n    --background: #191814;\n    --surface: #22211c;\n    --text: #eae5d8;\n    --muted: #b8ae9c;\n    --border: #3c382f;\n    --guide: #494338;\n    --hover: #2d2a22;\n    --selected: #2e2b23;\n    --accent: #d5ad55;\n    --focus: #e3bf70;\n    --link: #e3bf70;\n    --code: #1c1b17;\n  }\n}\n\n:root[data-theme="dark"] {\n  color-scheme: dark;\n  --background: #191814;\n  --surface: #22211c;\n  --text: #eae5d8;\n  --muted: #b8ae9c;\n  --border: #3c382f;\n  --guide: #494338;\n  --hover: #2d2a22;\n  --selected: #2e2b23;\n  --accent: #d5ad55;\n  --focus: #e3bf70;\n  --link: #e3bf70;\n  --code: #1c1b17;\n}\n\n* { box-sizing: border-box; }\n[hidden] { display: none !important; }\nhtml { height: 100%; }\nbody {\n  height: 100%;\n  margin: 0;\n  overflow: hidden;\n  background: var(--background);\n  color: var(--text);\n  font: 16px/1.75 "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;\n  overflow-wrap: anywhere;\n}\nmain { display: flex; flex-direction: column; height: 100vh; height: 100dvh; max-width: 1040px; margin-inline: auto; padding: 0 28px 24px; }\n.masthead, .brand { display: flex; align-items: center; }\n.masthead { flex: none; justify-content: space-between; gap: 16px; min-height: 64px; padding: 12px 8px; }\n.brand { min-width: 0; gap: 10px; font-size: 17px; font-weight: 650; letter-spacing: -.3px; line-height: 1.3; }\n.brand-mark { flex: 0 0 26px; width: 26px; height: 30px; color: var(--accent); }\nbutton {\n  min-height: 38px;\n  flex-shrink: 0;\n  padding: 7px 15px;\n  border: 1px solid var(--border);\n  border-radius: 7px;\n  background: var(--surface);\n  color: var(--text);\n  font: inherit;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: background 140ms ease, border-color 140ms ease;\n}\nbutton:hover:not(:disabled) { background: var(--hover); border-color: var(--guide); }\nbutton:disabled { opacity: .5; cursor: default; }\n:is(button, a, summary, .help-content, .tree):focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }\n:is(.tree, .help-content):focus-visible { outline-offset: -2px; }\n.theme-toggle { display: grid; place-items: center; width: 38px; padding: 0; border-color: transparent; background: transparent; }\n.theme-glyph { width: 17px; height: 17px; border: 1.5px solid currentColor; border-radius: 50%; background: linear-gradient(90deg, currentColor 50%, transparent 50%); transform: rotate(-30deg); }\na { color: var(--link); text-underline-offset: 4px; }\na:hover { text-decoration-thickness: 2px; }\n.reader { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); flex: 1; min-width: 0; min-height: 0; padding: 12px 30px 18px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }\n.document-header { grid-area: 1 / 1; padding-block: 12px 16px; border-bottom: 1px solid var(--border); }\n.header-bar { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 20px; }\n.document-info { display: contents; }\n.document-actions { grid-area: 1 / 2; align-self: center; display: flex; align-items: center; gap: 8px; }\n.document-actions > button { min-height: 34px; padding: 6px 12px; border-color: var(--guide); background: var(--surface); color: var(--text); font-size: 13px; line-height: 1.35; font-weight: 500; white-space: nowrap; }\n.document-actions > button:hover:not(:disabled) { background: var(--hover); }\n.document-header h1 { grid-area: 1 / 1; align-self: center; min-width: 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 0; font-size: 22px; line-height: 1.4; font-weight: 600; letter-spacing: -.3px; }\n.document-meta { grid-area: 2 / 1; margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }\n.help-toggle[aria-expanded="true"] { background: var(--hover); color: var(--text); }\n.help-panel { grid-area: 2 / 1; position: relative; z-index: 1; align-self: start; justify-self: end; display: flex; flex-direction: column; width: min(400px, 100%); min-height: 0; max-height: calc(100% - 8px); margin-top: 8px; padding: 18px; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); box-shadow: 0 12px 32px #0002; font-size: 13px; }\n.help-heading { display: flex; flex: none; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }\n.help-content { flex: 1; min-height: 0; padding-right: 4px; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }\n.help-close { width: 28px; min-height: 28px; padding: 0; border-color: transparent; color: var(--muted); font-size: 20px; font-weight: 400; }\n.help-heading h2 { margin: 0; font-size: 17px; font-weight: 650; }\n.help-group { padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--code); }\n.help-group + .help-group { margin-top: 12px; }\n.help-group h3 { margin: 0 0 8px; font-size: 13px; font-weight: 650; }\n.help-basics { margin: 0; }\n.help-basics > div { display: grid; grid-template-columns: 56px 1fr; gap: 10px; }\n.help-basics > div + div { margin-top: 10px; }\n.help-basics :is(dt, dd) { margin: 0; font-size: 12px; }\n.help-basics dt { font-weight: 600; }\n.help-basics dd, .help-note { color: var(--muted); }\n.control-label { color: var(--text); font-weight: 600; }\n.help-note { margin: 0 0 10px; font-size: 12px; }\n.shortcut-list { margin: 0; }\n.shortcut-list > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding-block: 6px; }\n.shortcut-list > div + div { border-top: 1px solid var(--border); }\n.shortcut-list :is(dt, dd) { margin: 0; font-size: 12px; }\n.shortcut-list dd { white-space: nowrap; text-align: right; }\n.source-example { display: flex; align-items: center; gap: 14px; }\n.source-example > code { padding: 7px 9px; background: var(--selected); font-size: 15px; }\n.source-example > span { color: var(--muted); font-size: 12px; }\n.source-example strong { color: var(--text); font-weight: 600; }\nkbd { display: inline-block; min-width: 23px; padding: 1px 5px; border: 1px solid var(--guide); border-bottom-width: 2px; border-radius: 4px; background: var(--surface); color: var(--text); font: 11px/1.6 "Cascadia Code", Consolas, monospace; text-align: center; }\n.tree { grid-area: 2 / 1; min-width: 0; min-height: 0; padding: 12px 4px 12px 0; overflow: auto; overscroll-behavior: contain; overflow-anchor: none; scroll-padding-block: 12px; scrollbar-gutter: stable; }\n.tree-node { min-width: 0; margin: 0; padding: 0; }\n.tree-node + .tree-node { margin-top: 4px; }\n.tree > .tree-node + .tree-node { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }\n.tree-row {\n  display: flex;\n  align-items: flex-start;\n  gap: 9px;\n  min-height: 44px;\n  padding: 9px 10px;\n  border-radius: 5px;\n  list-style: none;\n  line-height: 1.6;\n  cursor: pointer;\n  -webkit-tap-highlight-color: transparent;\n}\n.tree-row::-webkit-details-marker { display: none; }\n.tree-row::marker { content: ""; }\n.tree-row:hover { background: var(--hover); }\n.tree-row.is-selected { background: var(--selected); }\n.tree-row:focus-visible { outline-offset: -2px; }\n.heading-label { flex: 1; min-width: 0; font-weight: 500; }\n.heading-label a { font-weight: inherit; }\n.tree > .tree-node > .tree-row { font-size: 18px; }\n.tree > .tree-node > .tree-row > .heading-label { font-weight: 600; }\n.source-location { flex: 0 0 auto; padding-top: 4px; color: var(--muted); font: 11px/1.7 "Cascadia Code", Consolas, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }\n.chevron { display: grid; place-items: center; flex: 0 0 13px; height: 26px; color: var(--muted); }\n.chevron::before { content: ""; width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform 160ms ease; }\n.tree-node[open] > .tree-row > .chevron::before { transform: rotate(45deg) translate(-1px, -1px); }\n.children { min-width: 0; margin-left: var(--indent); padding-left: 12px; border-left: 1px solid var(--guide); }\n.tree-node[open] > .children { margin-block: 6px 8px; }\n.markdown { min-width: 0; }\n.preamble { padding: 0 10px 20px; }\n.section-body { padding: 0 10px 12px 1px; }\n.markdown > :first-child { margin-top: 8px; }\n.markdown > :last-child { margin-bottom: 0; }\n.markdown p { margin-block: 12px; }\n.markdown :is(ul, ol) { margin-block: 10px; padding-left: 25px; }\n.markdown li { padding-left: 2px; }\n.markdown li + li { margin-top: 5px; }\n.markdown li > p { margin-block: 6px; }\n.markdown li :is(ul, ol) { margin-block: 6px; }\n.markdown li.task-item { list-style: none; }\n.markdown input[type="checkbox"] { margin: 0 7px 0 -19px; accent-color: var(--accent); }\n.markdown blockquote { margin: 16px 0; padding: 4px 16px; border-left: 2px solid var(--accent); background: var(--hover); color: var(--muted); }\n.markdown :is(h1, h2, h3, h4, h5, h6) { margin-block: 20px 10px; line-height: 1.4; }\n.markdown h1 { font-size: 1.5em; }\n.markdown h2 { font-size: 1.3em; }\n.markdown h3 { font-size: 1.15em; }\n.markdown :is(h4, h5, h6) { font-size: 1em; }\ncode, pre { font-family: "Cascadia Code", Consolas, "Liberation Mono", monospace; font-size: .88em; }\n:not(pre) > code { padding: 2px 5px; border: 1px solid var(--border); border-radius: 4px; background: var(--code); }\npre { max-width: 100%; margin-block: 16px; padding: 15px 17px; overflow: auto; border: 1px solid var(--border); border-radius: 7px; background: var(--code); line-height: 1.7; tab-size: 4; overflow-wrap: normal; }\npre code { padding: 0; border: 0; font-size: inherit; }\n.markdown table { display: block; width: max-content; max-width: 100%; margin-block: 16px; overflow: auto; overflow-wrap: normal; border-collapse: collapse; font-size: .94em; }\n.markdown :is(th, td) { padding: 9px 13px; border: 1px solid var(--border); text-align: left; }\n.markdown th { background: var(--code); font-weight: 600; }\n.markdown hr { margin-block: 22px; border: 0; border-top: 1px solid var(--border); }\n:is(.resource-placeholder, .image-placeholder, .link-placeholder) { overflow-wrap: anywhere; }\n.resource-address { color: var(--muted); }\n.image-placeholder { padding: 2px 5px; border: 1px dashed var(--guide); border-radius: 4px; }\n.empty-document { padding: 28px 16px; text-align: center; color: var(--muted); }\n\n/* Native details remains fully usable in browsers without intrinsic-size animation. */\n@supports (interpolate-size: allow-keywords) and selector(details::details-content) {\n  .tree { interpolate-size: allow-keywords; }\n  .tree-node::details-content { height: 0; overflow: clip; transition: height 180ms cubic-bezier(.2, 0, 0, 1), content-visibility 180ms allow-discrete; }\n  .tree-node[open]::details-content { height: auto; transition-property: height; }\n  .tree.is-revealing .tree-node::details-content { transition: none; }\n}\n\n@media (max-width: 600px) {\n  :root { --indent: 10px; }\n  main { padding: 0 12px 24px; }\n  .masthead { gap: 10px; min-height: 56px; padding: 8px 3px; }\n  .brand { gap: 8px; font-size: 15px; }\n  .brand-mark { flex-basis: 22px; width: 22px; height: 26px; }\n  .reader { padding: 6px 12px 16px; border-radius: 9px; }\n  .document-header h1 { font-size: 20px; }\n  .help-panel { padding: 14px; }\n  .tree-row { gap: 6px; padding-inline: 6px; }\n  .tree > .tree-node > .tree-row { font-size: 17px; }\n  .children { padding-left: 5px; }\n  .section-body { padding-right: 6px; padding-left: 9px; }\n  .preamble { padding-inline: 6px; }\n  .markdown :is(ul, ol) { padding-left: 21px; }\n  .markdown blockquote { padding-inline: 10px; }\n  .markdown :is(th, td) { padding: 7px 9px; }\n  pre { padding: 12px; }\n}\n\n@media (max-width: 480px) {\n  .header-bar { column-gap: 12px; }\n  .document-meta { grid-column: 1 / -1; }\n  .document-actions { gap: 6px; }\n  .document-actions > button { padding-inline: 8px; }\n}\n\n@media (max-width: 300px) {\n  .header-bar { grid-template-columns: minmax(0, 1fr); }\n  .document-actions { grid-area: 3 / 1; flex-wrap: wrap; margin-top: 12px; }\n}\n\n@media (max-height: 480px) {\n  .help-panel { grid-row: 1 / -1; align-self: stretch; height: 100%; max-height: 100%; margin-top: 0; }\n}\n\n@media (pointer: coarse) {\n  button, .document-actions > button { min-height: 44px; }\n  .theme-toggle { width: 44px; }\n  .help-close { width: 44px; min-height: 44px; }\n}\n\n@media (prefers-reduced-motion: reduce) {\n  button, .chevron::before, .tree-node::details-content { transition: none; }\n}\n\n@media print {\n  :root, :root[data-theme] { color-scheme: light; --text: #000000; --muted: #444444; --surface: #ffffff; --border: #cccccc; --guide: #cccccc; --hover: #eeeeee; --selected: #ffffff; --code: #f4f4f4; --link: #000000; --accent: #555555; }\n  html, body { height: auto; }\n  body { overflow: visible; background: #ffffff; color: #000000; }\n  main { display: block; height: auto; max-width: none; padding: 0; }\n  button, .theme-toggle, .help-panel { display: none; }\n  .document-header h1 { display: block; overflow: visible; }\n  .masthead { min-height: 0; margin: 0 0 16px; padding: 0; }\n  .reader { display: block; border: 0; padding: 0; }\n  .tree { overflow: visible; scrollbar-gutter: auto; }\n  .tree-row.is-selected { background: none; }\n}\n' : readFileSync(new URL("./view.css", import.meta.url), "utf8");
-var script = true ? '(() => {\n  function initializeView() {\n    const themeToggle = document.getElementById("theme-toggle");\n    if (themeToggle) {\n      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");\n      const isDark = () => document.documentElement.dataset["theme"] ? document.documentElement.dataset["theme"] === "dark" : systemTheme.matches;\n      const syncThemeLabel = () => {\n        const label = isDark() ? "\\u5207\\u6362\\u5230\\u6D45\\u8272\\u6A21\\u5F0F" : "\\u5207\\u6362\\u5230\\u6DF1\\u8272\\u6A21\\u5F0F";\n        themeToggle.setAttribute("aria-label", label);\n        themeToggle.title = label;\n      };\n      themeToggle.addEventListener("click", () => {\n        document.documentElement.dataset["theme"] = isDark() ? "light" : "dark";\n        syncThemeLabel();\n      });\n      systemTheme.addEventListener("change", () => {\n        if (!document.documentElement.dataset["theme"]) syncThemeLabel();\n      });\n      syncThemeLabel();\n      themeToggle.hidden = false;\n    }\n    const helpToggle = document.getElementById("help-toggle");\n    const helpPanel = document.getElementById("reading-help");\n    if (helpToggle && helpPanel) {\n      const helpContent = helpPanel.querySelector(".help-content");\n      const setHelpOpen = (open) => {\n        helpPanel.hidden = !open;\n        helpToggle.setAttribute("aria-expanded", String(open));\n      };\n      const closeHelp = () => {\n        setHelpOpen(false);\n        helpToggle.focus({ preventScroll: true });\n      };\n      helpToggle.hidden = false;\n      helpToggle.addEventListener("click", () => {\n        const open = Boolean(helpPanel.hidden);\n        setHelpOpen(open);\n        if (open) helpContent?.focus({ preventScroll: true });\n      });\n      helpPanel.querySelector(".help-close")?.addEventListener("click", closeHelp);\n      const dismissOutside = (event) => {\n        if (!(event.target instanceof Node)) return;\n        if (!helpPanel.hidden && !helpPanel.contains(event.target) && !helpToggle.contains(event.target))\n          setHelpOpen(false);\n      };\n      document.addEventListener("pointerdown", dismissOutside);\n      document.addEventListener("focusin", dismissOutside);\n      document.addEventListener("keydown", (event) => {\n        if (event.key !== "Escape" || helpPanel.hidden) return;\n        event.preventDefault();\n        closeHelp();\n      });\n    }\n    const tree = document.getElementById("document-tree");\n    const toggleAll = document.getElementById("toggle-all");\n    if (!tree || !(toggleAll instanceof HTMLButtonElement)) return;\n    initializeTree(tree, toggleAll);\n  }\n  function initializeTree(tree, toggleAll) {\n    const summaryOf = (node) => node?.querySelector(":scope > summary.tree-row") ?? null;\n    const nodes = Array.from(tree.querySelectorAll("details.tree-node"));\n    const rows = nodes.flatMap((node) => {\n      const row = summaryOf(node);\n      return row ? [row] : [];\n    });\n    let selectedRow;\n    const parentNode = (node) => node?.parentElement?.closest("details.tree-node") ?? null;\n    function visibleAncestor(row) {\n      let visible = row;\n      for (let node = parentNode(row.parentElement); node; node = parentNode(node)) {\n        if (!node.open) visible = summaryOf(node) ?? visible;\n      }\n      return visible;\n    }\n    function selectRow(row, focus = false) {\n      if (!row) return;\n      selectedRow?.classList.remove("is-selected");\n      selectedRow = row;\n      row.classList.add("is-selected");\n      if (focus) row.focus({ preventScroll: true });\n    }\n    function syncState() {\n      const expanded = nodes.length > 0 && nodes.every((node) => node.open);\n      toggleAll.textContent = expanded ? "\\u5168\\u90E8\\u6298\\u53E0" : "\\u5168\\u90E8\\u5C55\\u5F00";\n      toggleAll.setAttribute("aria-expanded", String(expanded));\n      toggleAll.disabled = nodes.length === 0;\n      const focused = document.activeElement;\n      if (focused instanceof Element && tree.contains(focused)) {\n        let focusTarget = null;\n        for (let node = focused.closest("details.tree-node"); node; node = parentNode(node)) {\n          if (!node.open && focused !== summaryOf(node)) focusTarget = summaryOf(node);\n        }\n        if (focusTarget) selectRow(focusTarget, true);\n      }\n      if (selectedRow) selectRow(visibleAncestor(selectedRow));\n    }\n    tree.addEventListener("focusin", (event) => {\n      if (!(event.target instanceof Element)) return;\n      selectRow(event.target.closest("summary.tree-row"));\n    });\n    tree.addEventListener("click", (event) => {\n      if (!(event.target instanceof Element)) return;\n      const row = event.target.closest("summary.tree-row");\n      if (!row || event.target.closest("a, button, input, select, textarea")) return;\n      selectRow(row, true);\n    });\n    tree.addEventListener("toggle", syncState, true);\n    tree.addEventListener("keydown", (event) => {\n      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;\n      const row = event.target;\n      if (!(row instanceof HTMLElement) || !row.matches("summary.tree-row")) return;\n      const visibleRows = rows.filter((candidate) => visibleAncestor(candidate) === candidate);\n      const index = visibleRows.indexOf(row);\n      const node = row.parentElement;\n      if (!(node instanceof HTMLDetailsElement)) return;\n      let target = row;\n      switch (event.key) {\n        case "ArrowDown":\n          target = visibleRows[Math.min(index + 1, visibleRows.length - 1)] ?? row;\n          break;\n        case "ArrowUp":\n          target = visibleRows[Math.max(index - 1, 0)] ?? row;\n          break;\n        case "Home":\n          target = visibleRows[0] ?? row;\n          break;\n        case "End":\n          target = visibleRows.at(-1) ?? row;\n          break;\n        case "ArrowRight":\n          if (!node.open) node.open = true;\n          else\n            target = node.querySelector(":scope > .children > details.tree-node > summary.tree-row") ?? row;\n          break;\n        case "ArrowLeft":\n          if (node.open) node.open = false;\n          else target = summaryOf(parentNode(node)) ?? row;\n          break;\n        case "Enter":\n        case " ":\n          node.open = !node.open;\n          break;\n        default:\n          return;\n      }\n      event.preventDefault();\n      selectRow(target, true);\n      syncState();\n      target.scrollIntoView({ block: "nearest" });\n    });\n    toggleAll.addEventListener("click", () => {\n      const expand = !nodes.every((node) => node.open);\n      for (const node of nodes) node.open = expand;\n      syncState();\n    });\n    function revealHash(hash = window.location.hash) {\n      if (!hash || hash === "#") return;\n      let id;\n      try {\n        id = decodeURIComponent(hash.slice(1));\n      } catch {\n        return;\n      }\n      const target = document.getElementById(id);\n      if (!target || !tree.contains(target)) return;\n      let node = target.closest("details.tree-node");\n      if (!node) return;\n      const row = summaryOf(node);\n      if (!row) return;\n      tree.classList.add("is-revealing");\n      while (node) {\n        node.open = true;\n        node = parentNode(node);\n      }\n      target.getBoundingClientRect();\n      selectRow(row);\n      syncState();\n      row.scrollIntoView({ block: "start" });\n      requestAnimationFrame(() => {\n        tree.classList.remove("is-revealing");\n      });\n    }\n    document.addEventListener("click", (event) => {\n      if (event.defaultPrevented || event.button !== 0 || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey)\n        return;\n      if (!(event.target instanceof Element)) return;\n      const anchor = event.target.closest("a[href]");\n      const href = anchor?.getAttribute("href");\n      if (href?.startsWith("#")) revealHash(href);\n    });\n    window.addEventListener("hashchange", () => {\n      revealHash();\n    });\n    selectRow(rows[0]);\n    syncState();\n    revealHash();\n  }\n  initializeView();\n})();\n' : (await (await null).transform(readFileSync(new URL("./view.ts", import.meta.url), "utf8"), {
+var script = true ? `(() => {
+  function initializeView() {
+    const themeToggle = document.getElementById("theme-toggle");
+    const helpToggle = document.getElementById("help-toggle");
+    const helpPanel = document.getElementById("reading-help");
+    const tree = document.getElementById("document-tree");
+    const toggleAll = document.getElementById("toggle-all");
+    if (!(themeToggle instanceof HTMLButtonElement) || !(helpToggle instanceof HTMLButtonElement) || !helpPanel || !tree || !(toggleAll instanceof HTMLButtonElement))
+      return;
+    {
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+      const isDark = () => document.documentElement.dataset["theme"] ? document.documentElement.dataset["theme"] === "dark" : systemTheme.matches;
+      const syncTheme = () => {
+        const label = isDark() ? "\\u5207\\u6362\\u5230\\u6D45\\u8272\\u6A21\\u5F0F" : "\\u5207\\u6362\\u5230\\u6DF1\\u8272\\u6A21\\u5F0F";
+        themeToggle.setAttribute("aria-label", label);
+        themeToggle.title = label;
+        const color = getComputedStyle(document.documentElement).getPropertyValue("--background").trim();
+        for (const meta of document.querySelectorAll('meta[name="theme-color"]')) {
+          meta.content = color;
+        }
+      };
+      themeToggle.addEventListener("click", () => {
+        document.documentElement.dataset["theme"] = isDark() ? "light" : "dark";
+        syncTheme();
+      });
+      systemTheme.addEventListener("change", () => {
+        if (!document.documentElement.dataset["theme"]) syncTheme();
+      });
+      syncTheme();
+    }
+    {
+      const helpContent = helpPanel.querySelector(".help-content");
+      const setHelpOpen = (open) => {
+        helpPanel.hidden = !open;
+        helpToggle.setAttribute("aria-expanded", String(open));
+      };
+      const closeHelp = () => {
+        setHelpOpen(false);
+        helpToggle.focus({ preventScroll: true });
+      };
+      helpToggle.addEventListener("click", () => {
+        const open = Boolean(helpPanel.hidden);
+        setHelpOpen(open);
+        if (open) helpContent?.focus({ preventScroll: true });
+      });
+      helpPanel.querySelector(".help-close")?.addEventListener("click", closeHelp);
+      const dismissOutside = (event) => {
+        if (!(event.target instanceof Node)) return;
+        if (!helpPanel.hidden && !helpPanel.contains(event.target) && !helpToggle.contains(event.target))
+          setHelpOpen(false);
+      };
+      document.addEventListener("pointerdown", dismissOutside);
+      document.addEventListener("focusin", dismissOutside);
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape" || helpPanel.hidden) return;
+        event.preventDefault();
+        closeHelp();
+      });
+    }
+    initializeTree(tree, toggleAll);
+    themeToggle.disabled = false;
+    helpToggle.disabled = false;
+    themeToggle.hidden = false;
+    helpToggle.hidden = false;
+    toggleAll.hidden = false;
+  }
+  function initializeTree(tree, toggleAll) {
+    const summaryOf = (node) => node?.querySelector(":scope > summary.tree-row") ?? null;
+    const nodes = Array.from(tree.querySelectorAll("details.tree-node"));
+    const rows = nodes.flatMap((node) => {
+      const row = summaryOf(node);
+      return row ? [row] : [];
+    });
+    let selectedRow;
+    const parentNode = (node) => node?.parentElement?.closest("details.tree-node") ?? null;
+    function visibleAncestor(row) {
+      let visible = row;
+      for (let node = parentNode(row.parentElement); node; node = parentNode(node)) {
+        if (!node.open) visible = summaryOf(node) ?? visible;
+      }
+      return visible;
+    }
+    function selectRow(row, focus = false) {
+      if (!row) return;
+      selectedRow?.classList.remove("is-selected");
+      selectedRow = row;
+      row.classList.add("is-selected");
+      if (focus) row.focus({ preventScroll: true });
+    }
+    function syncState() {
+      const expanded = nodes.length > 0 && nodes.every((node) => node.open);
+      toggleAll.textContent = expanded ? "\\u5168\\u90E8\\u6298\\u53E0" : "\\u5168\\u90E8\\u5C55\\u5F00";
+      toggleAll.setAttribute("aria-expanded", String(expanded));
+      toggleAll.disabled = nodes.length === 0;
+      const focused = document.activeElement;
+      if (focused instanceof Element && tree.contains(focused)) {
+        let focusTarget = null;
+        for (let node = focused.closest("details.tree-node"); node; node = parentNode(node)) {
+          if (!node.open && focused !== summaryOf(node)) focusTarget = summaryOf(node);
+        }
+        if (focusTarget) selectRow(focusTarget, true);
+      }
+      if (selectedRow) selectRow(visibleAncestor(selectedRow));
+    }
+    tree.addEventListener("focusin", (event) => {
+      if (!(event.target instanceof Element)) return;
+      selectRow(event.target.closest("summary.tree-row"));
+    });
+    tree.addEventListener("click", (event) => {
+      if (!(event.target instanceof Element)) return;
+      const row = event.target.closest("summary.tree-row");
+      if (!row || event.target.closest("a, button, input, select, textarea")) return;
+      selectRow(row, true);
+    });
+    tree.addEventListener("toggle", syncState, true);
+    tree.addEventListener("keydown", (event) => {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      const row = event.target;
+      if (!(row instanceof HTMLElement) || !row.matches("summary.tree-row")) return;
+      const visibleRows = rows.filter((candidate) => visibleAncestor(candidate) === candidate);
+      const index = visibleRows.indexOf(row);
+      const node = row.parentElement;
+      if (!(node instanceof HTMLDetailsElement)) return;
+      let target = row;
+      switch (event.key) {
+        case "ArrowDown":
+          target = visibleRows[Math.min(index + 1, visibleRows.length - 1)] ?? row;
+          break;
+        case "ArrowUp":
+          target = visibleRows[Math.max(index - 1, 0)] ?? row;
+          break;
+        case "Home":
+          target = visibleRows[0] ?? row;
+          break;
+        case "End":
+          target = visibleRows.at(-1) ?? row;
+          break;
+        case "ArrowRight":
+          if (!node.open) node.open = true;
+          else
+            target = node.querySelector(":scope > .children > details.tree-node > summary.tree-row") ?? row;
+          break;
+        case "ArrowLeft":
+          if (node.open) node.open = false;
+          else target = summaryOf(parentNode(node)) ?? row;
+          break;
+        case "Enter":
+        case " ":
+          node.open = !node.open;
+          break;
+        default:
+          return;
+      }
+      event.preventDefault();
+      selectRow(target, true);
+      syncState();
+      target.scrollIntoView({ block: "nearest" });
+    });
+    toggleAll.addEventListener("click", () => {
+      const expand = !nodes.every((node) => node.open);
+      for (const node of nodes) node.open = expand;
+      syncState();
+    });
+    function revealHash(hash = window.location.hash) {
+      if (!hash || hash === "#") return;
+      let id;
+      try {
+        id = decodeURIComponent(hash.slice(1));
+      } catch {
+        return;
+      }
+      const target = document.getElementById(id);
+      if (!target || !tree.contains(target)) return;
+      let node = target.closest("details.tree-node");
+      if (!node) return;
+      const row = summaryOf(node);
+      if (!row) return;
+      tree.classList.add("is-revealing");
+      while (node) {
+        node.open = true;
+        node = parentNode(node);
+      }
+      target.getBoundingClientRect();
+      selectRow(row);
+      syncState();
+      row.scrollIntoView({ block: "start" });
+      requestAnimationFrame(() => {
+        tree.classList.remove("is-revealing");
+      });
+    }
+    document.addEventListener("click", (event) => {
+      if (event.defaultPrevented || event.button !== 0 || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey)
+        return;
+      if (!(event.target instanceof Element)) return;
+      const anchor = event.target.closest("a[href]");
+      const href = anchor?.getAttribute("href");
+      if (href?.startsWith("#")) revealHash(href);
+    });
+    window.addEventListener("hashchange", () => {
+      revealHash();
+    });
+    selectRow(rows[0]);
+    syncState();
+    revealHash();
+  }
+  initializeView();
+})();
+` : (await (await null).transform(readFileSync(new URL("./view.ts", import.meta.url), "utf8"), {
   loader: "ts",
   format: "iife",
   target: "es2022"
@@ -5494,6 +5704,8 @@ function parseDocument(markdown) {
 // src/render.ts
 function renderDocument(markdown, { sourceName = "document.md" } = {}) {
   const { md, env, root, nodes } = parseDocument(markdown);
+  const documentTitle = nodes.find((node) => node.level === 1 && node.title.trim())?.title.replace(/\s+/gu, " ").trim() ?? sourceName;
+  const description = `\u300A${documentTitle}\u300B\u7684 Markdown \u6298\u53E0\u6811\u9605\u8BFB\u89C6\u56FE\u3002`;
   const renderBody = (tokens, className) => tokens.length ? `<div class="markdown ${className}" data-source-line="${String((tokens.find((token) => token.map)?.map?.[0] ?? 0) + 1)}">${md.renderer.render(tokens, md.options, env)}</div>` : "";
   const renderNode = (node, isRoot = false) => `<details class="tree-node" id="${node.id}" data-source-line="${String(node.line)}" data-source-end="${String(node.endLine)}" data-heading-level="${String(node.level)}"${isRoot ? " open" : ""}>
 <summary class="tree-row" tabindex="0"><span class="chevron" aria-hidden="true"></span><span class="heading-label" id="${escapeHtml2(node.alias)}">${node.titleHtml || '<span class="empty-heading">\uFF08\u7A7A\u6807\u9898\uFF09</span>'}</span><span class="source-location" title="\u6E90\u6587\u4EF6\u7B2C ${String(node.line)} \u884C">L${String(node.line)}</span></summary>
@@ -5518,18 +5730,23 @@ The input document retains its original rights and license.
 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-${scriptHash}'; style-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; font-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-${scriptHash}'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; font-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="generator" content="Markdown Tree View ${package_default.version}">
 <meta name="source-sha256" content="${sourceHash}">
-<title>${escapeHtml2(sourceName)} \xB7 Markdown Tree View</title>
+<title>${escapeHtml2(documentTitle)} \xB7 Markdown Tree View</title>
+<meta name="description" content="${escapeHtml2(description)}">
+<meta name="theme-color" content="#f7f6f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#191814" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/vnd.microsoft.icon" href="${faviconIco}">
+<link rel="icon" type="image/svg+xml" sizes="any" href="${faviconSvg}">
 <style>${css}</style>
 </head>
 <body>
 <main>
-<header class="masthead"><div class="brand"><svg class="brand-mark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg><span>Markdown Tree View</span></div><button type="button" id="theme-toggle" class="theme-toggle" aria-label="\u5207\u6362\u914D\u8272" title="\u5207\u6362\u914D\u8272" hidden><span class="theme-glyph" aria-hidden="true"></span></button></header>
+<header class="masthead"><div class="brand"><svg class="brand-mark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg><span>Markdown Tree View</span></div><button type="button" id="theme-toggle" class="theme-toggle" aria-label="\u5207\u6362\u914D\u8272" title="\u5207\u6362\u914D\u8272" hidden disabled><span class="theme-glyph" aria-hidden="true"></span></button></header>
 <article class="reader">
 <header class="document-header">
-<div class="header-bar"><div class="document-info"><h1 title="${escapeHtml2(sourceName)}">${escapeHtml2(sourceName)}</h1><p class="document-meta">${String(nodes.length)} \u4E2A\u6807\u9898 \xB7 ${String(lineCount)} \u884C</p></div><div class="document-actions"><button type="button" id="toggle-all" aria-controls="document-tree" aria-expanded="${String(allExpanded)}"${nodes.length ? "" : " disabled"}>${allExpanded ? "\u5168\u90E8\u6298\u53E0" : "\u5168\u90E8\u5C55\u5F00"}</button><button type="button" id="help-toggle" class="help-toggle" aria-controls="reading-help" aria-expanded="false" hidden>\u64CD\u4F5C\u5E2E\u52A9</button></div></div>
+<div class="header-bar"><div class="document-info"><h1 title="${escapeHtml2(sourceName)}">${escapeHtml2(sourceName)}</h1><p class="document-meta">${String(nodes.length)} \u4E2A\u6807\u9898 \xB7 ${String(lineCount)} \u884C</p></div><div class="document-actions"><button type="button" id="toggle-all" aria-controls="document-tree" aria-expanded="${String(allExpanded)}" hidden disabled>${allExpanded ? "\u5168\u90E8\u6298\u53E0" : "\u5168\u90E8\u5C55\u5F00"}</button><button type="button" id="help-toggle" class="help-toggle" aria-controls="reading-help" aria-expanded="false" hidden disabled>\u64CD\u4F5C\u5E2E\u52A9</button></div></div>
 </header>
 <section id="reading-help" class="help-panel" aria-label="\u64CD\u4F5C\u5E2E\u52A9" hidden>
 <div class="help-heading"><h2>\u64CD\u4F5C\u5E2E\u52A9</h2><button type="button" class="help-close" aria-label="\u5173\u95ED\u5E2E\u52A9">\xD7</button></div>

@@ -18,7 +18,8 @@
         "type-check": "tsc --noEmit && tsc -p tsconfig.browser.json",
         "check": "npm run format:check && npm run lint && npm run type-check",
         "build": "node build.ts",
-        "verify": "npm run check && npm run build && npm run build -- --check"
+        "test": "node --test src/*.test.ts",
+        "verify": "npm run check && npm run build && npm run build -- --check && npm test"
     },
     "dependencies": {
         "markdown-it": "15.0.2"

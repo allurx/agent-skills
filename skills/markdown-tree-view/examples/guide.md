@@ -1,6 +1,8 @@
-# Project Handbook
+# Project **Handbook** & `Notes`
 
 This fictional handbook demonstrates an offline Markdown tree. Its text is a public example, not a personal instruction file.
+
+The formatted heading supplies the plain-text tab title, `Project Handbook & Notes · Markdown Tree View`. The page includes its own favicon and a neutral reading-view description.
 
 ## Working agreements
 
@@ -78,4 +80,5 @@ This Setext heading uses the same level as a `##` heading. Its text and position
 
 - **Reading:** Select a row, expand a section, and follow its children.
 - **Keyboard:** Try the arrow keys, Home, End, Enter, and Space while a section row has focus.
-- **Appearance:** Try light and dark mode and a narrow browser window.
+- **Appearance:** Try light and dark mode and a narrow browser window. Supporting browsers also update their theme color.
+- **Without scripts:** The content and native section toggles remain available; script-dependent buttons stay hidden.

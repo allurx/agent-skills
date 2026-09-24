@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import type { Token } from "markdown-it";
 import packageJson from "../package.json" with { type: "json" };
-import { css, script, license } from "./assets.ts";
+import { css, script, license, faviconSvg, faviconIco } from "./assets.ts";
 import { escapeHtml, parseDocument } from "./markdown.ts";
 import type { HeadingSection } from "./markdown.ts";
 
@@ -11,6 +11,12 @@ export interface RenderOptions {
 
 export function renderDocument(markdown: string, { sourceName = "document.md" }: RenderOptions = {}): string {
     const { md, env, root, nodes } = parseDocument(markdown);
+    const documentTitle =
+        nodes
+            .find((node) => node.level === 1 && node.title.trim())
+            ?.title.replace(/\s+/gu, " ")
+            .trim() ?? sourceName;
+    const description = `《${documentTitle}》的 Markdown 折叠树阅读视图。`;
     const renderBody = (tokens: Token[], className: string): string =>
         tokens.length
             ? `<div class="markdown ${className}" data-source-line="${String((tokens.find((token) => token.map)?.map?.[0] ?? 0) + 1)}">${md.renderer.render(tokens, md.options, env)}</div>`
@@ -41,18 +47,23 @@ The input document retains its original rights and license.
 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-${scriptHash}'; style-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; font-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-${scriptHash}'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; font-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="generator" content="Markdown Tree View ${packageJson.version}">
 <meta name="source-sha256" content="${sourceHash}">
-<title>${escapeHtml(sourceName)} · Markdown Tree View</title>
+<title>${escapeHtml(documentTitle)} · Markdown Tree View</title>
+<meta name="description" content="${escapeHtml(description)}">
+<meta name="theme-color" content="#f7f6f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#191814" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/vnd.microsoft.icon" href="${faviconIco}">
+<link rel="icon" type="image/svg+xml" sizes="any" href="${faviconSvg}">
 <style>${css}</style>
 </head>
 <body>
 <main>
-<header class="masthead"><div class="brand"><svg class="brand-mark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg><span>Markdown Tree View</span></div><button type="button" id="theme-toggle" class="theme-toggle" aria-label="切换配色" title="切换配色" hidden><span class="theme-glyph" aria-hidden="true"></span></button></header>
+<header class="masthead"><div class="brand"><svg class="brand-mark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg><span>Markdown Tree View</span></div><button type="button" id="theme-toggle" class="theme-toggle" aria-label="切换配色" title="切换配色" hidden disabled><span class="theme-glyph" aria-hidden="true"></span></button></header>
 <article class="reader">
 <header class="document-header">
-<div class="header-bar"><div class="document-info"><h1 title="${escapeHtml(sourceName)}">${escapeHtml(sourceName)}</h1><p class="document-meta">${String(nodes.length)} 个标题 · ${String(lineCount)} 行</p></div><div class="document-actions"><button type="button" id="toggle-all" aria-controls="document-tree" aria-expanded="${String(allExpanded)}"${nodes.length ? "" : " disabled"}>${allExpanded ? "全部折叠" : "全部展开"}</button><button type="button" id="help-toggle" class="help-toggle" aria-controls="reading-help" aria-expanded="false" hidden>操作帮助</button></div></div>
+<div class="header-bar"><div class="document-info"><h1 title="${escapeHtml(sourceName)}">${escapeHtml(sourceName)}</h1><p class="document-meta">${String(nodes.length)} 个标题 · ${String(lineCount)} 行</p></div><div class="document-actions"><button type="button" id="toggle-all" aria-controls="document-tree" aria-expanded="${String(allExpanded)}" hidden disabled>${allExpanded ? "全部折叠" : "全部展开"}</button><button type="button" id="help-toggle" class="help-toggle" aria-controls="reading-help" aria-expanded="false" hidden disabled>操作帮助</button></div></div>
 </header>
 <section id="reading-help" class="help-panel" aria-label="操作帮助" hidden>
 <div class="help-heading"><h2>操作帮助</h2><button type="button" class="help-close" aria-label="关闭帮助">×</button></div>
