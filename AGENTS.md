@@ -2,6 +2,8 @@
 
 安装或更新 Skill 前，先阅读目标 Skill 的 README 及其引用的安装文档，再选择安装工具和来源目录。各 Skill 的入口见[仓库 README](README.md#skills)。
 
+本机个人通用 Skill 统一安装到 `~/.agents/skills/`，调用安装工具时显式指定目标目录，不依赖工具默认值。项目专用 Skill 使用项目的 `.agents/skills/`；内置系统 Skill 和插件缓存由宿主管理，不随个人安装迁移。源码、构建交付目录及安装副本按各 Skill 的说明区分；目录链接只用于明确采用的本地维护方式。
+
 # Skill 格式
 
 - `SKILL.md` 的 front matter 依次使用 `name`、`description`、`license`，其他必要字段追加在后。`name` 与目录名一致，保留英文标识符；描述和面向使用者的文案使用简体中文，技术标识符保留原文，许可信息依据对应声明填写。
