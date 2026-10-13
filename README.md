@@ -6,13 +6,14 @@
 
 | Skill | 用途 |
 | --- | --- |
+| [`engineering-review-and-refactoring`](skills/engineering-review-and-refactoring/README.md) | 审查整体工程质量，在授权范围内实施必要的重构与修复 |
 | [`instruction-structurer`](skills/instruction-structurer/README.md) | 拆分并分类已有指令，改善查找并保留原意 |
 | [`markdown-tree-view`](skills/markdown-tree-view/README.md) | 将 Markdown 转换为保留内容和标题层级的离线 HTML 折叠树 |
 | [`staged-candid-character-photographer`](skills/staged-candid-character-photographer/README.md) | 引导设置人物摄影参数，生成图片或提示词 |
 
 ## 安装
 
-安装或更新前，先阅读上表中目标 Skill 的 README 及其引用的安装说明，再选择安装方式。`markdown-tree-view` 需从源码构建完整交付目录；另外两个纯文档 Skill 可直接安装各自的完整目录。具体步骤在各 Skill 中维护。
+安装或更新前，先阅读上表中目标 Skill 的 README 及其引用的安装说明，再选择安装方式。`markdown-tree-view` 需从源码构建完整交付目录；其余纯文档 Skill 可直接安装各自的完整目录。具体步骤在各 Skill 中维护。
 
 ## 使用
 
