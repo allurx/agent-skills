@@ -6,7 +6,17 @@
 
 运行需要 Node.js 24 或更新版本。首次安装和更新按[安装说明](docs/installation.md)执行：从源码构建时，只安装生成的 `dist/markdown-tree-view/` 完整目录。安装后无需源码、开发依赖或 npm 安装。
 
-## 快速上手
+## 使用
+
+### 通过 Skill 调用
+
+完成安装后，按名称调用：
+
+```text
+使用 $markdown-tree-view 将 ./AGENTS.md 转换为 ./work/agents-tree.html。
+```
+
+### 通过命令行调用
 
 在已安装的 Skill 根目录执行：
 
@@ -32,14 +42,6 @@ node scripts/markdown-tree-view.mjs --help
 - 输入与输出参数必填，可简写为 `-i` / `-o`；路径含空格时需加引号。输入必须是有效 UTF-8，且不能与输出指向同一文件。
 - 生成模式会创建输出目录并覆盖指定输出文件；`--check` 比较完整 HTML，包括默认图标和页面元信息，只比较、不写文件，需要更新时去掉该参数重新生成。
 - CLI 和 Skill 构建命令的退出码：`0` 表示成功或一致，`1` 表示检查时缺失或不一致，`2` 表示参数或运行错误。
-
-## Skill 使用
-
-完成安装后，按名称调用：
-
-```text
-使用 $markdown-tree-view，将 ./AGENTS.md 转换为 ./work/agents-tree.html。
-```
 
 ## 支持范围
 
