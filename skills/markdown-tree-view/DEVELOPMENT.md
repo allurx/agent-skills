@@ -26,6 +26,12 @@ npm run build -- --check
 
 修改源码、资源、Skill 指令或交付文档后重新构建。`dist/` 由 Git 忽略，源码目录不保留旧的 `scripts/` bundle 或生成的第三方声明。新增必要使用文件时同步更新构建文件清单；开发说明、源码和开发依赖不进入安装目录。
 
+## 持续验证与依赖更新
+
+仓库 [CI](../../.github/workflows/ci.yml) 在 `main` 推送和 PR 中执行本目录的 `npm run verify`，并通过构建后的公开 CLI 检查示例渲染、生成后的一致性和修改输入后的过期判断，确认 `--check` 不改写输出。其他纯文档 Skill 不参与 npm 构建。
+
+[Dependabot 配置](../../.github/dependabot.yml) 每周为本目录的 npm 依赖和仓库 Actions 创建 PR，将 minor/patch 更新分组。自动合并等待上述验证通过，并采用 [Web Foundation 共享策略](https://github.com/allurx/web-foundation/blob/main/docs/dependencies.md)；大版本、预发布和策略无法确认的更新保留人工处理。更新合入 `main` 后不自动安装 Skill，也不发布构建产物。
+
 ## 源码入口
 
 全部运行源码位于 [src/](src/)，CLI 入口为 [src/cli.ts](src/cli.ts)，构建入口为 [build.ts](build.ts)，Skill 指令维护于 [SKILL.md](SKILL.md)。安装开发依赖后可直接调试：
