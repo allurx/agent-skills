@@ -11,7 +11,6 @@
 | [`instruction-structurer`](skills/instruction-structurer/README.md) | 拆分并分类已有指令，改善查找并保留原意 |
 | [`markdown-tree-view`](skills/markdown-tree-view/README.md) | 将 Markdown 转换为保留内容和标题层级的离线 HTML 折叠树 |
 | [`novel-writing`](skills/novel-writing/README.md) | 规划、撰写、续写、修订与审阅小说，维护连续性与阅读体验 |
-| [`staged-candid-character-photographer`](skills/staged-candid-character-photographer/README.md) | 引导设置人物摄影参数，生成图片或提示词 |
 
 ## 安装
 
