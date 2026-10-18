@@ -13,7 +13,7 @@ npm run verify
 
 `npm run check` 执行格式、类型感知 lint 和类型检查；`npm run format` 格式化维护代码、配置与文档。`npm run verify` 完成检查、构建、构建产物一致性校验和公开 CLI 行为测试。
 
-格式、ESLint 和 TypeScript 的共同规则使用 [`@allurx/js-config`](https://github.com/allurx/allurx-build/tree/main/js-config)，文件范围、`ESNext` 标准库及 Node.js 与浏览器的配置分离仍由本工程维护。
+格式、ESLint 和 TypeScript 的共同规则使用 [`@allurx/js-config`](https://github.com/allurx/allurx-build/tree/main/js-config)，JavaScript 类型基线沿用共享的 ES2025；文件范围及 Node.js 与浏览器的配置分离由本工程维护。
 
 [`tsconfig.json`](tsconfig.json) 是统一入口，通过项目引用分开检查 [`tsconfig.node.json`](tsconfig.node.json) 和 [`tsconfig.browser.json`](tsconfig.browser.json)。`type-check` 执行 `tsc -b --noEmit`，`-b` 产生的构建状态记录保存在被忽略的 `node_modules/.cache/typescript/` 中；类型感知 ESLint 通过同一组项目引用识别各环境。
 
