@@ -1,0 +1,10 @@
+{
+    "extends": "@allurx/js-config/tsconfig/node",
+    "compilerOptions": {
+        "target": "ESNext",
+        "lib": ["ESNext"],
+        "tsBuildInfoFile": "./node_modules/.cache/typescript/tsconfig.node.tsbuildinfo"
+    },
+    "include": ["*.ts", "src/**/*.ts", "tests/**/*.ts"],
+    "exclude": ["src/view.ts", "src/browser/**"]
+}

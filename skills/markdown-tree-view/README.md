@@ -59,6 +59,6 @@ node scripts/markdown-tree-view.mjs --help
 
 ## 许可证
 
-本工具的自有代码、Skill 指令、文档和示例采用 [MIT 许可证](LICENSE.txt)。第三方依赖保留其原有许可；构建交付目录中的 `THIRD-PARTY-NOTICES.txt` 包含完整声明。
+本工具的自有代码、Skill 指令、文档和示例采用 [Apache-2.0 许可证](LICENSE.txt)。第三方依赖保留其原有许可；构建交付目录中的 `THIRD-PARTY-NOTICES.txt` 包含完整声明。
 
-构建的独立 CLI 脚本自动携带本工具许可和第三方声明，生成的 HTML 自动携带本工具许可。HTML 中的许可仅覆盖页面模板、样式和脚本；输入 Markdown 及其转换后的文档内容仍按原有授权处理，不会自动采用 MIT。
+构建的独立 CLI 脚本自动携带本工具许可和第三方声明，生成的 HTML 自动携带本工具许可。HTML 中的许可仅覆盖页面模板、样式和脚本；输入 Markdown 及其转换后的文档内容仍按原有授权处理，不会自动采用 Apache-2.0。

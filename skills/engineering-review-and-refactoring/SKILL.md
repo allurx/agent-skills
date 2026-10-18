@@ -1,7 +1,7 @@
 ---
 name: engineering-review-and-refactoring
 description: 对指定项目或范围进行整体工程质量审查，并在授权范围内实施必要的重构与修复。适用于全面质量审查、架构与可维护性评估，以及审查与重构一并进行的任务；不用于普通局部修改或仅安全专项审计。
-license: MIT
+license: Apache-2.0
 ---
 
 # 工程质量审查与重构

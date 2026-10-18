@@ -1,7 +1,7 @@
 ---
 name: markdown-tree-view
 description: 将单个 Markdown 文件转换为保留内容、顺序和标题层级的离线 HTML 折叠树，或检查已有 HTML 是否与输入同步。适用于 AGENTS.md、CLAUDE.md、README 和规范文档的可折叠阅读视图；不用于改写内容、合并文档或分析指令优先级。
-license: MIT
+license: Apache-2.0
 ---
 
 # Markdown 折叠树

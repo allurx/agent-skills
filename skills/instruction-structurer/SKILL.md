@@ -1,7 +1,7 @@
 ---
 name: instruction-structurer
 description: 对已有全局指令、AGENTS.md 或团队规范做语义保真的原子化拆分与递归分类，让长句中的独立要求能通过标题和层级直接发现。用于拆分复合规则、整理指令层级或审计其可查找性；不用于仓库接入审计、补写新政策或一般文章润色。
-license: MIT
+license: Apache-2.0
 ---
 
 # 指令结构整理

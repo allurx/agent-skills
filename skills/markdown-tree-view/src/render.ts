@@ -1,3 +1,8 @@
+/*
+ * Copyright 2026 allurx
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { createHash } from "node:crypto";
 import type { Token } from "markdown-it";
 import packageJson from "../package.json" with { type: "json" };

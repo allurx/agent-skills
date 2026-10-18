@@ -1,3 +1,6 @@
+# Copyright 2026 allurx
+# SPDX-License-Identifier: Apache-2.0
+
 interface:
   display_name: "全局协作指令提炼与复核"
   short_description: "从历史协作证据复核全局指令，核实实际覆盖范围并提出可审阅的修改建议"

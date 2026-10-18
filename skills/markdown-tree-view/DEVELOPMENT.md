@@ -11,11 +11,15 @@ npm ci
 npm run verify
 ```
 
-`npm run check` 执行格式、类型感知 lint 和类型检查；`npm run format` 格式化维护代码与配置。`npm run verify` 完成检查、构建、构建产物一致性校验和公开 CLI 行为测试。源码使用严格 TypeScript，Node.js 与浏览器分别检查类型。
+`npm run check` 执行格式、类型感知 lint 和类型检查；`npm run format` 格式化维护代码、配置与文档。`npm run verify` 完成检查、构建、构建产物一致性校验和公开 CLI 行为测试。
 
 格式、ESLint 和 TypeScript 的共同规则使用 [`@allurx/js-config`](https://github.com/allurx/allurx-build/tree/main/js-config)，文件范围、`ESNext` 标准库及 Node.js 与浏览器的配置分离仍由本工程维护。
 
-类型检查使用安装在 `@typescript/native` 别名下的 TypeScript 7；类型感知 ESLint 使用 `typescript` 包提供的 TypeScript 6 API。`type-check` 显式调用前者的编译器路径，避免两个包同名的 `tsc` 命令相互覆盖。两套工具链的用途见 [Microsoft 的并行使用说明](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6-0)；直接依赖与精确版本以 [package.json](package.json) 和锁文件为准。
+[`tsconfig.json`](tsconfig.json) 是统一入口，通过项目引用分开检查 [`tsconfig.node.json`](tsconfig.node.json) 和 [`tsconfig.browser.json`](tsconfig.browser.json)。`type-check` 执行 `tsc -b --noEmit`，`-b` 产生的构建状态记录保存在被忽略的 `node_modules/.cache/typescript/` 中；类型感知 ESLint 通过同一组项目引用识别各环境。
+
+类型检查使用安装在 `@typescript/native` 别名下的 TypeScript 7；`typescript` 别名指向 `@typescript/typescript6`，为类型感知 ESLint 提供 TypeScript 6 API。两者分别提供 `tsc` 和 `tsc6`，项目脚本直接调用 `tsc`，无需指定包内路径。采用该并行方案的原因见 [Microsoft 的说明](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)；直接依赖与精确版本以 [package.json](package.json) 和锁文件为准。
+
+Prettier 和 ESLint 默认从本目录检查，排除规则分别放在 [`.prettierignore`](.prettierignore) 和 [`eslint.config.ts`](eslint.config.ts)。CLI 示例保留原始 Markdown 语法与源行位置，Skill 界面元数据保留仓库规定的 YAML 缩进和双引号；其余维护代码、配置和文档使用共享排版规则。
 
 单独构建或检查产物：
 

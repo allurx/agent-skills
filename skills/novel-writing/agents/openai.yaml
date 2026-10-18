@@ -1,3 +1,6 @@
+# Copyright 2026 allurx
+# SPDX-License-Identifier: Apache-2.0
+
 interface:
   display_name: "小说创作与修订"
   short_description: "根据当前任务与作品资料完成小说规划、写作、修订和审阅，兼顾连续性与阅读体验"

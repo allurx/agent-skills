@@ -1,3 +1,8 @@
+/*
+ * Copyright 2026 allurx
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 function initializeView(): void {
     const themeToggle = document.getElementById("mtv:theme-toggle");
     const helpToggle = document.getElementById("mtv:help-toggle");

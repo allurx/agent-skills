@@ -3,7 +3,8 @@
     "compilerOptions": {
         "target": "ESNext",
         "lib": ["ESNext", "DOM", "DOM.Iterable"],
-        "erasableSyntaxOnly": true
+        "erasableSyntaxOnly": true,
+        "tsBuildInfoFile": "./node_modules/.cache/typescript/tsconfig.browser.tsbuildinfo"
     },
     "include": ["src/view.ts", "src/browser/**/*.ts"]
 }

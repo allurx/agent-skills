@@ -1,3 +1,6 @@
+# Copyright 2026 allurx
+# SPDX-License-Identifier: Apache-2.0
+
 interface:
   display_name: "指令结构整理"
   short_description: "拆分长句中的独立要求，以清晰标题和递归分类改善查找并保留原意"

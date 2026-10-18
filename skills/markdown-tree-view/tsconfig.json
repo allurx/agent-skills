@@ -1,9 +1,4 @@
 {
-    "extends": "@allurx/js-config/tsconfig/node",
-    "compilerOptions": {
-        "target": "ESNext",
-        "lib": ["ESNext"]
-    },
-    "include": ["src/**/*.ts", "tests/**/*.ts", "build.ts", "eslint.config.ts"],
-    "exclude": ["src/view.ts", "src/browser/**"]
+    "files": [],
+    "references": [{ "path": "./tsconfig.node.json" }, { "path": "./tsconfig.browser.json" }]
 }

@@ -1,3 +1,8 @@
+/*
+ * Copyright 2026 allurx
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { readFileSync } from "node:fs";
 
 declare const BUNDLED_CSS: string | undefined;

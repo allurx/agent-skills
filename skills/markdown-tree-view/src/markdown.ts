@@ -1,3 +1,8 @@
+/*
+ * Copyright 2026 allurx
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import MarkdownIt from "markdown-it";
 import type { MarkdownIt as MarkdownParser, StateCore, Token } from "markdown-it";
 

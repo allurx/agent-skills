@@ -1,7 +1,7 @@
 ---
 name: novel-writing
 description: "规划、撰写、续写、修订或审阅小说，结合当前任务资料维护人物、情节与连续性。也用于具体创作问题的讨论；不用于普通小说推荐、作品百科或单纯格式转换。"
-license: MIT
+license: Apache-2.0
 ---
 
 # 小说创作与修订

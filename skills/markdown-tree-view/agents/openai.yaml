@@ -1,3 +1,6 @@
+# Copyright 2026 allurx
+# SPDX-License-Identifier: Apache-2.0
+
 interface:
   display_name: "Markdown 折叠树"
   short_description: "将 Markdown 转换为保留正文、顺序和标题层级的离线 HTML 折叠树"

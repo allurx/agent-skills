@@ -1,0 +1,9 @@
+dist/
+work/
+package-lock.json
+
+# CLI 示例保留 Setext 标题、嵌套列表及原始 HTML 的输入字节和源行位置。
+examples/guide.md
+
+# 仓库 Skill 契约要求两空格缩进和双引号；Prettier 会移除非必要 YAML 引号。
+agents/openai.yaml

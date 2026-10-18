@@ -1,7 +1,7 @@
 ---
 name: global-instruction-review
 description: 从历史会话中提炼并复核全局协作指令，核实实际覆盖范围、审查现有规则并提出有证据的候选修改。用于首次提炼、接续审查或根据协作经历评估全局规则；不用于普通历史查询、提示词讨论或单纯的指令结构整理。
-license: MIT
+license: Apache-2.0
 ---
 
 # 全局协作指令提炼与复核

@@ -1,3 +1,8 @@
+/*
+ * Copyright 2026 allurx
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { appendFileSync, copyFileSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
