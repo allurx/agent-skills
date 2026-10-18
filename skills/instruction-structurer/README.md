@@ -4,9 +4,7 @@
 
 ## 安装
 
-从选定的源码版本取得完整 `skills/instruction-structurer/` 目录，以副本形式放入 Codex 用户技能目录 `~/.agents/skills/instruction-structurer/`，或其他宿主规定的位置。此 Skill 仅包含指令和参考资料，无需构建或安装依赖。保留 [SKILL.md](SKILL.md)、[参考示例](references/examples.md)、[界面元数据](agents/openai.yaml) 和 [许可证](LICENSE.txt)；只复制入口文件会遗漏引用资料。
-
-更新前将既有目录及本地定制备份到 Skill 搜索范围之外，再用新目录替换；不要合并复制而遗留旧文件。同一 Skill 只保留一个可发现入口，重新开启任务后核对加载的路径。安装位置及发现规则见[Codex 官方技能文档](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills)。
+无需构建，安装源为完整 `skills/instruction-structurer/` 目录。按[仓库安装与更新说明](https://github.com/allurx/agent-skills#安装)选择目标位置，并保留整个目录，其中包含工作流引用的[参考示例](references/examples.md)。
 
 ## 使用
 

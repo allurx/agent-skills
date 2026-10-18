@@ -14,7 +14,22 @@
 
 ## 安装
 
-安装或更新前，先阅读上表中目标 Skill 的 README 及其引用的安装说明，再选择安装方式。`markdown-tree-view` 需从源码构建完整交付目录；其余纯文档 Skill 可直接安装各自的完整目录。具体步骤在各 Skill 中维护。
+先阅读目标 Skill 的 README，确认用途、运行条件和安装源：
+
+- 纯文档 Skill：使用所选源码版本中的完整 `skills/<skill-name>/` 目录，无需构建或安装依赖。将 `<skill-name>` 替换为上表中的英文标识符。
+- `markdown-tree-view`：按其[构建与安装说明](skills/markdown-tree-view/docs/installation.md)生成完整 `dist/markdown-tree-view/` 交付目录，安装该产物；源码目录不作为安装包。
+
+### 安装与更新
+
+将选定的完整目录复制到宿主的 Skill 搜索位置。Codex 个人通用 Skill 使用 `~/.agents/skills/<skill-name>/`，项目专用 Skill 使用项目的 `.agents/skills/<skill-name>/`；调用安装工具时显式指定目标目录。安装结果应直接包含 `<skill-name>/SKILL.md`，保留包内参考资料、脚本和许可证，避免再套一层同名目录。其他宿主使用其规定的位置，Codex 的发现机制见[官方技能文档](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills)。
+
+更新前核对实际安装路径，将旧目录及本地定制备份到 Skill 搜索范围之外，再用新目录替换，避免合并复制遗留废弃文件。副本不会随源码自动更新；需要恢复时使用备份，并保留更新后需要合并的定制。安装或更新后，完成该 Skill 的特有检查，并在新任务中核对实际加载路径。
+
+### 从本地源码维护
+
+直接维护本仓库时，纯文档 Skill 可以使用指向其完整源码目录的链接，例如 Windows 目录联接（Junction）。这种方式会立即使用源码修改，只在明确接受该行为时采用；不要只链接 `SKILL.md` 或同时保留同一作用域的重复入口。源码目录移动后需更新链接。
+
+需要构建的 Skill 仍按各自说明维护源码、交付产物和安装副本，不用源码链接代替构建。内置系统 Skill 和插件缓存由宿主管理，不随个人安装迁移。
 
 ## 使用
 
@@ -24,11 +39,7 @@
 使用 $instruction-structurer 整理这份指令文档，保留原意并按职责分类。
 ```
 
-具体要求见各技能的 `SKILL.md`；Markdown 转换命令见[使用说明](skills/markdown-tree-view/README.md)，摄影参数与示例见[摄影说明](skills/staged-candid-character-photographer/README.md)。
-
-### 注意事项
-
-- 实际出图需要宿主提供图像生成能力。
+调用示例、特有条件和默认行为见各 Skill 的 README；详细执行流程由对应的 `SKILL.md` 及其引用资料维护。
 
 ## 许可证
 

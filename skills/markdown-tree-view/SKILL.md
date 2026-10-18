@@ -29,8 +29,6 @@ node "<skill-directory>/scripts/markdown-tree-view.mjs" --input "<input.md>" --o
 
 文档级标题按真实 Markdown 级别建树，不要求编号。重复标题和跳级标题允许存在；引用或列表内部的标题仍在相应正文中。页面默认展开根节点、折叠下级章节，并显示源文件名和源行定位；源文件 SHA-256 保留在 HTML 元数据中。需要核对原始语法时请查看输入 Markdown 文件。
 
-页面自带内嵌 favicon，无需额外复制图标、注入标签或修改 CSP。标签页标题取首个非空文档级 H1 的纯文本，缺失时回退文件名，并附加 ` · Markdown Tree View`；description 只基于文档标题说明阅读视图用途。主题色随系统或本页手动配色更新，刷新恢复跟随系统；兼容性取舍见 [README.md](README.md#支持范围)。JavaScript 不可用或初始化失败时，正文和原生折叠仍可用，依赖脚本的操作按钮仅在初始化成功后显示、启用。
-
 原始 HTML 按文字呈现。图片只显示替代文字和地址，不加载资源；相对文件链接显示目的地址。支持点击 `http:`、`https:`、`mailto:` 和页内片段链接，外部链接需要相应网络或应用。脚注、数学公式、Mermaid 等没有专门的渲染扩展，按普通 Markdown 或代码文字显示。HTML 包含转换后的文档内容，折叠章节中的内容也会随文件一起分享。
 
 默认 CSP 保持离线资源限制。为启用 Cloudflare Web Analytics 的托管页面生成 HTML 时，读取[托管说明](docs/hosting.md)，按用户要求决定是否添加 `--allow-cloudflare-analytics`；生成与 `--check` 使用相同选项。该选项不会注入统计脚本或配置站点，不能将允许加载等同于已完成线上验证。

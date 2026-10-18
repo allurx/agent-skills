@@ -4,11 +4,7 @@
 
 ## 安装
 
-从选定的源码版本取得完整 `skills/novel-writing/` 目录，以副本形式放入 Codex 用户技能目录 `~/.agents/skills/novel-writing/`，或其他宿主规定的位置。此 Skill 仅包含指令和参考资料，无需构建或安装依赖；保留整个目录，包含 [SKILL.md](SKILL.md)、[创作判断参考](references/craft-guide.md)、[研究来源与作品样本](references/research-sources.md)、[界面元数据](agents/openai.yaml) 和 [许可证](LICENSE.txt)。安装位置及发现规则见 [Codex 官方技能文档](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills)。
-
-更新前将既有目录及本地定制备份到 Skill 搜索范围之外，再用新目录替换，避免合并复制遗留旧文件。同一 Skill 只保留一个可发现入口，安装后核对实际加载路径。
-
-在同一台机器上直接维护本仓库时，也可以让用户技能目录中的 `novel-writing` 链接到仓库的完整 `skills/novel-writing/` 目录，例如使用 Windows 目录联接（Junction）。这种方式会立即使用源码修改，适合接受这一行为的维护者；不要只链接 `SKILL.md`，也不要同时保留同名安装副本。目录移动后需要更新链接。
+无需构建，安装源为完整的 `skills/novel-writing/` 目录。按[仓库安装与更新说明](https://github.com/allurx/agent-skills#安装)选择目标位置，并保留完整目录。
 
 ## 使用
 
