@@ -12,34 +12,27 @@
         "markdown-tree-view": "dist/markdown-tree-view/scripts/markdown-tree-view.mjs"
     },
     "scripts": {
-        "format": "prettier src/**/*.ts build.ts eslint.config.mjs tsconfig*.json package.json --write",
-        "format:check": "prettier src/**/*.ts build.ts eslint.config.mjs tsconfig*.json package.json --check",
-        "lint": "eslint src build.ts",
-        "type-check": "tsc --noEmit && tsc -p tsconfig.browser.json",
+        "format": "prettier src/**/*.ts tests/**/*.ts build.ts eslint.config.ts tsconfig*.json package.json --write",
+        "format:check": "prettier src/**/*.ts tests/**/*.ts build.ts eslint.config.ts tsconfig*.json package.json --check",
+        "lint": "eslint src tests build.ts eslint.config.ts --max-warnings 0",
+        "type-check": "node node_modules/@typescript/native/bin/tsc --noEmit && node node_modules/@typescript/native/bin/tsc -p tsconfig.browser.json",
         "check": "npm run format:check && npm run lint && npm run type-check",
         "build": "node build.ts",
-        "verify": "npm run check && npm run build && npm run build -- --check"
+        "test": "node --test tests/*.test.ts",
+        "verify": "npm run check && npm run build && npm run build -- --check && npm test"
     },
     "dependencies": {
         "markdown-it": "15.0.2"
     },
     "devDependencies": {
-        "@eslint/js": "10.0.1",
-        "@types/node": "26.6.5",
+        "@allurx/js-config": "1.0.1",
+        "@types/node": "24.19.2",
         "@typescript/native": "npm:typescript@7.0.2",
         "esbuild": "0.28.2",
         "eslint": "10.12.0",
+        "jiti": "2.7.0",
         "prettier": "3.9.10",
-        "typescript": "npm:@typescript/typescript6@6.0.2",
-        "typescript-eslint": "8.71.2"
+        "typescript": "6.0.3"
     },
-    "prettier": {
-        "tabWidth": 4,
-        "printWidth": 120,
-        "semi": true,
-        "singleQuote": false,
-        "endOfLine": "lf",
-        "embeddedLanguageFormatting": "auto",
-        "trailingComma": "es5"
-    }
+    "prettier": "@allurx/js-config/prettier"
 }

@@ -1,27 +1,9 @@
 {
+    "extends": "@allurx/js-config/tsconfig/node",
     "compilerOptions": {
         "target": "ESNext",
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
-        "lib": ["ESNext"],
-        "types": ["node"],
-        "noEmit": true,
-        "allowImportingTsExtensions": true,
-        "erasableSyntaxOnly": true,
-        "verbatimModuleSyntax": true,
-        "strict": true,
-        "allowUnusedLabels": false,
-        "allowUnreachableCode": false,
-        "exactOptionalPropertyTypes": true,
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitOverride": true,
-        "noImplicitReturns": true,
-        "noPropertyAccessFromIndexSignature": true,
-        "noUncheckedIndexedAccess": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "skipLibCheck": true
+        "lib": ["ESNext"]
     },
-    "include": ["src/**/*.ts", "build.ts"],
+    "include": ["src/**/*.ts", "tests/**/*.ts", "build.ts", "eslint.config.ts"],
     "exclude": ["src/view.ts", "src/browser/**"]
 }

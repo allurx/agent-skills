@@ -11,9 +11,11 @@ npm ci
 npm run verify
 ```
 
-`npm run check` 执行格式、类型感知 lint 和类型检查；`npm run format` 格式化维护代码与配置。`npm run verify` 完成检查、构建及构建产物一致性校验。源码使用严格 TypeScript，Node.js 与浏览器分别检查类型。
+`npm run check` 执行格式、类型感知 lint 和类型检查；`npm run format` 格式化维护代码与配置。`npm run verify` 完成检查、构建、构建产物一致性校验和公开 CLI 行为测试。源码使用严格 TypeScript，Node.js 与浏览器分别检查类型。
 
-类型检查使用 TypeScript 7 的 `tsc`；类型感知 ESLint 使用官方 TypeScript 6 API 兼容包，两者通过 [Microsoft 推荐的 npm alias 方案](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6-0)并行安装。
+格式、ESLint 和 TypeScript 的共同规则使用 [`@allurx/js-config`](https://github.com/allurx/allurx-build/tree/main/js-config)，文件范围、`ESNext` 标准库及 Node.js 与浏览器的配置分离仍由本工程维护。
+
+类型检查使用安装在 `@typescript/native` 别名下的 TypeScript 7；类型感知 ESLint 使用 `typescript` 包提供的 TypeScript 6 API。`type-check` 显式调用前者的编译器路径，避免两个包同名的 `tsc` 命令相互覆盖。两套工具链的用途见 [Microsoft 的并行使用说明](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6-0)；直接依赖与精确版本以 [package.json](package.json) 和锁文件为准。
 
 单独构建或检查产物：
 
@@ -28,9 +30,9 @@ npm run build -- --check
 
 ## 持续验证与依赖更新
 
-仓库 [CI](../../.github/workflows/ci.yml) 在 `main` 推送和 PR 中执行本目录的 `npm run verify`，并通过构建后的公开 CLI 检查示例渲染、生成后的一致性和修改输入后的过期判断，确认 `--check` 不改写输出。其他纯文档 Skill 不参与 npm 构建。
+仓库 [CI](../../.github/workflows/ci.yml) 在 `main` 推送和 PR 中调用固定发行 SHA 的共享 Node CI，在本目录执行 `npm ci` 和 `npm run verify`。本地与 CI 均通过 [CLI 测试](tests/cli.test.ts)检查示例渲染、生成后的一致性和修改输入后的过期判断，确认 `--check` 不改写输出。其他纯文档 Skill 不参与 npm 构建。
 
-[Dependabot 配置](../../.github/dependabot.yml) 每周为本目录的 npm 依赖和仓库 Actions 创建 PR，将 minor/patch 更新分组。自动合并等待上述验证通过，并采用 [Web Foundation 共享策略](https://github.com/allurx/web-foundation/blob/main/docs/dependencies.md)；大版本、预发布和策略无法确认的更新保留人工处理。更新合入 `main` 后不自动安装 Skill，也不发布构建产物。
+[Renovate 配置](../../.github/renovate.json) 为 `main` 管理依赖更新，采用 [Allurx Build 共享策略](https://github.com/allurx/allurx-build/blob/main/docs/dependency-updates.md)。常规更新在全部检查通过后按策略自动合并，共享配置与工作流等基础设施更新保留人工审核。仓库需要完成 Renovate App 授权和 onboarding；配置文件本身不证明机器人已运行。更新合入 `main` 后不自动安装 Skill，也不发布构建产物。
 
 ## 源码入口
 
