@@ -9,7 +9,7 @@
 | Skill                                                                                       | 用途                                                   |
 | ------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
 | [`engineering-review-and-refactoring`](skills/engineering-review-and-refactoring/README.md) | 审查整体工程质量，在授权范围内实施必要的重构与修复     |
-| [`global-instruction-review`](skills/global-instruction-review/README.md)                   | 从历史协作提炼并复核全局指令，核实覆盖并提供候选修改   |
+| [`global-instruction-review`](skills/global-instruction-review/README.md)                   | 审查全局指令、从历史提炼要求，并按授权实施已审阅修改   |
 | [`instruction-structurer`](skills/instruction-structurer/README.md)                         | 拆分并分类已有指令，改善查找并保留原意                 |
 | [`markdown-tree-view`](skills/markdown-tree-view/README.md)                                 | 将 Markdown 转换为保留内容和标题层级的离线 HTML 折叠树 |
 | [`novel-writing`](skills/novel-writing/README.md)                                           | 规划、撰写、续写、修订与审阅小说，维护连续性与阅读体验 |
