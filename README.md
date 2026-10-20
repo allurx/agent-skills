@@ -11,7 +11,7 @@ Individual Skill READMEs, `SKILL.md` instructions, and detailed guides linked be
 | Skill                                                                                       | Purpose                                                                                                      |
 | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | [`engineering-review-and-refactoring`](skills/engineering-review-and-refactoring/README.md) | Review overall engineering quality and carry out necessary refactoring and fixes within the authorized scope |
-| [`global-instruction-review`](skills/global-instruction-review/README.md)                   | Review global instructions, derive requirements from history, and implement reviewed changes when authorized       |
+| [`global-instruction-review`](skills/global-instruction-review/README.md)                   | Review or update global instructions, derive requirements from history, and assess related feedback       |
 | [`instruction-structurer`](skills/instruction-structurer/README.md)                         | Split and organize existing instructions to improve navigation while preserving their meaning                |
 | [`markdown-tree-view`](skills/markdown-tree-view/README.md)                                 | Convert Markdown into an offline collapsible HTML tree that preserves content and heading hierarchy          |
 | [`novel-writing`](skills/novel-writing/README.md)                                           | Plan, write, continue, revise, and review novels while maintaining continuity and reading quality            |

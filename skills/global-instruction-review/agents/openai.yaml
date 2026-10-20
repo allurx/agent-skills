@@ -3,5 +3,5 @@
 
 interface:
   display_name: "全局协作指令提炼与复核"
-  short_description: "审查全局指令、从历史协作提炼要求，或按明确授权实施已审阅候选并验证变化"
-  default_prompt: "使用 $global-instruction-review 按本次范围审查全局指令、从历史提炼要求，或实施我已明确授权的审阅方案，并说明依据与验证结果。"
+  short_description: "审查或按明确要求修改全局指令、从历史提炼要求，或评估相关新证据与退步"
+  default_prompt: "使用 $global-instruction-review 按本次范围审查或修改全局指令、从历史提炼要求，或评估相关新证据与退步，并说明依据与验证结果。"
