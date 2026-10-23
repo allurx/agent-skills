@@ -22,7 +22,7 @@
         "verify": "npm run check && npm run build && npm run build -- --check && npm test"
     },
     "dependencies": {
-        "markdown-it": "15.0.2"
+        "markdown-it": "15.0.3"
     },
     "devDependencies": {
         "@allurx/js-config": "1.1.0",
