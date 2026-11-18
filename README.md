@@ -10,6 +10,7 @@ Individual Skill READMEs, `SKILL.md` instructions, and detailed guides linked be
 
 | Skill                                                                                       | Purpose                                                                                                      |
 | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| [`agent-guidance-review`](skills/agent-guidance-review/README.md)                         | Evaluate global instructions and all self-maintained Skills, including the review Skill itself               |
 | [`engineering-review-and-refactoring`](skills/engineering-review-and-refactoring/README.md) | Review overall engineering quality and carry out necessary refactoring and fixes within the authorized scope |
 | [`global-instruction-review`](skills/global-instruction-review/README.md)                   | Review or update global instructions, derive requirements from history, and assess related feedback       |
 | [`instruction-structurer`](skills/instruction-structurer/README.md)                         | Split and organize existing instructions to improve navigation while preserving their meaning                |

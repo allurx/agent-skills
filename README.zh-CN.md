@@ -8,6 +8,7 @@
 
 | Skill                                                                                       | 用途                                                   |
 | ------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| [`agent-guidance-review`](skills/agent-guidance-review/README.md)                         | 评估全局协作指令和全部自维护 Skill，包括评估入口自身   |
 | [`engineering-review-and-refactoring`](skills/engineering-review-and-refactoring/README.md) | 审查整体工程质量，在授权范围内实施必要的重构与修复     |
 | [`global-instruction-review`](skills/global-instruction-review/README.md)                   | 审查或按授权修改全局指令、从历史提炼要求并评估相关反馈   |
 | [`instruction-structurer`](skills/instruction-structurer/README.md)                         | 拆分并分类已有指令，改善查找并保留原意                 |

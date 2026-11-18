@@ -1,0 +1,7 @@
+# Copyright 2026 allurx
+# SPDX-License-Identifier: Apache-2.0
+
+interface:
+  display_name: "指令与 Skill 评估"
+  short_description: "评估全局协作指令和所有自维护 Skill，检查新模型下的表现与调整依据"
+  default_prompt: "使用 $agent-guidance-review 评估我的全局指令和全部自维护 Skill，包括本入口。"
