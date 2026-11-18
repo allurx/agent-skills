@@ -19,7 +19,7 @@
 
 先阅读目标 Skill 的 README，确认用途、运行条件和安装源：
 
-- 纯文档 Skill：使用所选源码版本中的完整 `skills/<skill-name>/` 目录，无需构建或安装依赖。将 `<skill-name>` 替换为上表中的英文标识符。
+- 对于无需构建的 Skill，安装所选源码版本中的完整 `skills/<skill-name>/` 目录。各 Skill 的 README 说明所需运行环境。将 `<skill-name>` 替换为上表中的英文标识符。
 - `markdown-tree-view`：按其[构建与安装说明](skills/markdown-tree-view/docs/installation.md)生成完整 `dist/markdown-tree-view/` 交付目录，安装该产物；源码目录不作为安装包。
 
 ### 安装与更新
@@ -30,7 +30,7 @@
 
 ### 从本地源码维护
 
-直接维护本仓库时，纯文档 Skill 可以使用指向其完整源码目录的链接，例如 Windows 目录联接（Junction）。这种方式会立即使用源码修改，只在明确接受该行为时采用；不要只链接 `SKILL.md` 或同时保留同一作用域的重复入口。源码目录移动后需更新链接。
+直接维护本仓库时，无需构建的 Skill 可以使用指向其完整源码目录的链接，例如 Windows 目录联接（Junction）。这种方式会立即使用源码修改，只在明确接受该行为时采用；不要只链接 `SKILL.md` 或同时保留同一作用域的重复入口。源码目录移动后需更新链接。
 
 需要构建的 Skill 仍按各自说明维护源码、交付产物和安装副本，不用源码链接代替构建。内置系统 Skill 和插件缓存由宿主管理，不随个人安装迁移。
 

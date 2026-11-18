@@ -23,7 +23,7 @@ Individual Skill READMEs, `SKILL.md` instructions, and detailed guides linked be
 
 Read the target Skill's README first to confirm its purpose, runtime requirements, and installation source:
 
-- **Documentation-only Skills:** Use the complete `skills/<skill-name>/` directory from the chosen source version. No build or dependency installation is required. Replace `<skill-name>` with an identifier from the table above.
+- **Skills that run from source:** Install the complete `skills/<skill-name>/` directory from the chosen version. Each Skill's README lists any runtime requirements. Replace `<skill-name>` with an identifier from the table above.
 - **`markdown-tree-view`:** Follow its [build and installation guide](skills/markdown-tree-view/docs/installation.md) to generate the complete `dist/markdown-tree-view/` distribution directory, then install that output. The source directory is not an installation package.
 
 ### Installing and updating
@@ -34,7 +34,7 @@ Before updating, verify the actual installation path and back up the old directo
 
 ### Maintaining a local source checkout
 
-When maintaining this repository directly, documentation-only Skills can use a link to their complete source directory, such as a Windows directory junction. This makes source edits take effect immediately; use it only when that behavior is intended. Do not link only `SKILL.md` or keep duplicate entries in the same scope. Update the link if the source directory moves.
+When maintaining this repository directly, Skills that run from source can use a link to their complete source directory, such as a Windows directory junction. This makes source edits take effect immediately; use it only when that behavior is intended. Do not link only `SKILL.md` or keep duplicate entries in the same scope. Update the link if the source directory moves.
 
 For Skills that require a build, keep the source, distribution output, and installed copy separate as described in their documentation. A source link does not replace the build. Built-in system Skills and plugin caches are managed by the host and are not part of personal Skill migration.
 
