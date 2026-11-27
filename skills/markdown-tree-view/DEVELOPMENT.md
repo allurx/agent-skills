@@ -15,9 +15,9 @@ npm run verify
 
 格式、ESLint 和 TypeScript 的共同规则使用 [`@allurx/js-config`](https://github.com/allurx/allurx-build/tree/main/js-config)，JavaScript 类型基线沿用共享的 ES2025；文件范围及 Node.js 与浏览器的配置分离由本工程维护。
 
-[`tsconfig.json`](tsconfig.json) 是统一入口，通过项目引用分开检查 [`tsconfig.node.json`](tsconfig.node.json) 和 [`tsconfig.browser.json`](tsconfig.browser.json)。`type-check` 执行 `tsc -b --noEmit`，`-b` 产生的构建状态记录保存在被忽略的 `node_modules/.cache/typescript/` 中；类型感知 ESLint 通过同一组项目引用识别各环境。
+[`tsconfig.json`](tsconfig.json) 是统一入口，通过项目引用分开检查 [`tsconfig.node.json`](tsconfig.node.json) 和 [`tsconfig.browser.json`](tsconfig.browser.json)。`type-check` 使用 `-b --noEmit` 检查两个项目，构建状态记录保存在被忽略的 `node_modules/.cache/typescript/` 中。类型感知 ESLint 通过同一组项目引用识别各环境。
 
-类型检查使用安装在 `@typescript/native` 别名下的 TypeScript 7；`typescript` 别名指向 `@typescript/typescript6`，为类型感知 ESLint 提供 TypeScript 6 API。两者分别提供 `tsc` 和 `tsc6`，项目脚本直接调用 `tsc`，无需指定包内路径。采用该并行方案的原因见 [Microsoft 的说明](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)；直接依赖与精确版本以 [package.json](package.json) 和锁文件为准。
+TypeScript 7 以 `typescript-native-compiler` 为别名安装。`type-check` 显式运行该包的 `bin/tsc`，避免 npm 将同名的 `tsc` 命令指向 TypeScript 6。类型感知 ESLint 通过 `typescript` 别名加载 `@typescript/typescript6` 提供的 API。版本以 [package.json](package.json) 和锁文件为准。两代工具并用的背景见 [Microsoft 的说明](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)。
 
 Prettier 和 ESLint 默认从本目录检查，排除规则分别放在 [`.prettierignore`](.prettierignore) 和 [`eslint.config.ts`](eslint.config.ts)。CLI 示例保留原始 Markdown 语法与源行位置，Skill 界面元数据保留仓库规定的 YAML 缩进和双引号；其余维护代码、配置和文档使用共享排版规则。
 
