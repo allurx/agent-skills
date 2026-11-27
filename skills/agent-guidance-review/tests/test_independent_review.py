@@ -1,7 +1,8 @@
-"""Regression cases for the independent reviewer's startup-input checks."""
+"""Regression cases for the independent reviewer's isolation checks and diagnostics."""
 
 import json
 from pathlib import Path
+import subprocess
 import sys
 import unittest
 from unittest.mock import patch
@@ -25,6 +26,28 @@ def message(role, text):
     return {"type": "message", "role": role, "content": [{"type": "input_text", "text": text}]}
 
 
+class TurnDiagnosticTests(unittest.TestCase):
+    def test_cli_failure_reports_stage_and_only_an_available_thread_id(self):
+        thread_id = "40781091-aaab-4af3-948e-e1445d925655"
+        started = json.dumps({"type": "thread.started", "thread_id": thread_id}).encode()
+        private_text = b"private fixture output"
+        cases = [
+            (None, b"", "First turn", False),
+            (None, started + b"\n" + private_text, "First turn", True),
+            (thread_id, b"", "Second turn", True),
+        ]
+        for resume_id, stdout, stage, has_id in cases:
+            with self.subTest(resume_id=resume_id, stdout=stdout):
+                result = subprocess.CompletedProcess([], 7, stdout=stdout, stderr=private_text)
+                with patch.object(subprocess, "run", return_value=result), self.assertRaises(ValueError) as error:
+                    independent_review.execute_turn(["codex"], {}, Path("."), "goal", resume_id)
+                diagnostic = str(error.exception)
+                self.assertIn(stage, diagnostic)
+                self.assertIn("exit 7", diagnostic)
+                self.assertEqual(has_id, thread_id in diagnostic)
+                self.assertNotIn(private_text.decode(), diagnostic)
+
+
 class StartupIsolationTests(unittest.TestCase):
     def probe(self, *context, sources=None, references=()):
         marker = "test-review-start"
@@ -35,7 +58,8 @@ class StartupIsolationTests(unittest.TestCase):
         ]
         if sources is None:
             sources = [("AGENTS.md", MEMORY_RULE + "\n" + OTHER_RULE)]
-        with patch.object(independent_review, "checked", return_value=json.dumps(messages)):
+        result = subprocess.CompletedProcess([], 0, stdout=json.dumps(messages).encode())
+        with patch.object(subprocess, "run", return_value=result):
             independent_review.startup_probe(["codex"], {}, Path("."), sources, marker, references)
 
     def test_neutral_memory_heading_is_allowed(self):
